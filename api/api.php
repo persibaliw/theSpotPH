@@ -94,13 +94,60 @@ elseif ($action === 'get_profile') {
     exit;
 }
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Include PHPMailer files (Adjust paths if your folder name is different)
+require 'PHPMailer/Exception.php';
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+
 elseif ($action === 'book') {
     $data = json_decode(file_get_contents('php://input'), true);
     $token = bin2hex(random_bytes(16));
+    
     $stmt = $pdo->prepare("INSERT INTO bookings (token, name, email, phone, event_date, package, message) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $success = $stmt->execute([$token, $data['name'], $data['email'], $data['phone'], $data['date'], $data['package'], $data['message']]);
+
+    if ($success) {
+        $mail = new PHPMailer(true);
+
+        try {
+            // --- Server Settings ---
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'johnpercivalaguilar01@gmail.com';
+            $mail->Password   = 'ifcn mdsr lxwu ycmg';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            // --- Recipients ---
+            $mail->setFrom('johnpercivalaguilar01@gmail.com', 'TheSpotPH');
+            $mail->addAddress($data['email'], $data['name']);
+
+            // --- Content ---
+            $trackingUrl = "https://thespotph.vercel.app/track.php?id=" . $token;
+            $mail->isHTML(true);
+            $mail->Subject = 'Your Booking Request Status - TheSpotPH';
+            $mail->Body    = "
+                <div style='font-family: sans-serif; max-width: 600px; border: 1px solid #eee; padding: 20px;'>
+                    <h2 style='color: #cfc7b0;'>Hello " . htmlspecialchars($data['name']) . "!</h2>
+                    <p>We've received your booking request for <strong>" . date("F j, Y", strtotime($data['date'])) . "</strong>.</p>
+                    <p>You can track your request status using the button below:</p>
+                    <a href='$trackingUrl' style='display:inline-block; padding:12px 25px; background:#cfc7b0; color:#111; text-decoration:none; border-radius:30px; font-weight:bold;'>Track My Ticket</a>
+                    <p style='margin-top:20px; font-size:12px; color:#888;'>Reference ID: $token</p>
+                </div>
+            ";
+
+            $mail->send();
+        } catch (Exception $e) {
+            // Silently fail email so the booking still goes through
+        }
+    }
+
     ob_clean();
-    echo json_encode(['success' => $success, 'token' => $token]); 
+    echo json_encode(['success' => $success, 'token' => $token]);
     exit;
 }
 
