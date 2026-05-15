@@ -5,21 +5,12 @@ error_reporting(0);
 ini_set('display_errors', 0);
 
 //--- DATABASE CONNECTION ---
-// $host=getenv('DB_HOST');
-// $port=getenv('DB_PORT');
-// $db=getenv('DB_NAME');
-// $user=getenv('DB_USER');
-// $pass=getenv('DB_PASS');
-$host="thespotphdb-thespotph.h.aivencloud.com";
-$port=18663;
-$db="defaultdb";
-$user="avnadmin";
-$pass="AVNS_v56EA402DIGZeEvonj0";
+$host=getenv('DB_HOST');
+$port=getenv('DB_PORT');
+$db=getenv('DB_NAME');
+$user=getenv('DB_USER');
+$pass=getenv('DB_PASS');
 $ssl_ca = __DIR__ . '/certs/ca.pem'; 
-
-if (!file_exists($ssl_ca)) {
-    die(json_encode(['success' => false, 'message' => 'SSL Certificate not found at: ' . $ssl_ca]));
-}
 
 // --- GET ACTION ---
 $action = $_GET['action'] ?? ''; 
@@ -34,12 +25,10 @@ try {
         PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
     ];
     $pdo = new PDO($dsn, $user, $pass, $options);
-// } catch (PDOException $e) {
-//     die(json_encode(['success' => false, 'message' => 'Connection Error']));
-// }
     } catch (PDOException $e) {
-    die(json_encode(['success' => false, 'message' => $e->getMessage()]));
-}
+        die(json_encode(['success' => false, 'message' => 'Connection Error']));
+    }
+    
 
 // --- ACTIONS ---
 
