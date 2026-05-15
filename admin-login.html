@@ -205,12 +205,24 @@
           loginBtn.innerText = "Sign In";
           loginBtn.disabled = false;
         }
-      } catch (err) {
-        errorMsg.innerText = "Connection error. Please try again.";
-        errorMsg.classList.add("show");
-        loginBtn.innerText = "Sign In";
-        loginBtn.disabled = false;
-      }
+      // } catch (err) {
+      //   errorMsg.innerText = "Connection error. Please try again.";
+      //   errorMsg.classList.add("show");
+      //   loginBtn.innerText = "Sign In";
+      //   loginBtn.disabled = false;
+      // }
+          } catch (err) {  
+            console.error("--- LOGIN DEBUG START ---");
+            console.log("Error Name:", err.name);
+            console.log("Error Message:", err.message);
+            console.dir(err);
+            console.error("--- LOGIN DEBUG END ---");
+        
+            errorMsg.innerText = "Connection error: " + err.message;
+            errorMsg.classList.add("show");
+            loginBtn.innerText = "Sign In";
+            loginBtn.disabled = false;
+          }
     });
   </script>
 </body>
