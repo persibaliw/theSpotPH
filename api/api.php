@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 error_reporting(0);
 ini_set('display_errors', 0);
 
---- DATABASE CONNECTION ---
+//--- DATABASE CONNECTION ---
 $host=getenv('DB_HOST');
 $port=getenv('DB_PORT');
 $db=getenv('DB_NAME');
