@@ -483,7 +483,7 @@
   }
 
   async function updateStatus(status) {
-    const data = await ('update_status', {
+    const data = await apiFetch('update_status', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: currentId, status })
@@ -496,7 +496,7 @@
   }
 
   async function loadStaff() {
-    const staff = await ('get_staff');
+    const staff = await apiFetch('get_staff');
     if (!Array.isArray(staff)) return;
 
     const select = document.getElementById('staffSelect');
@@ -518,7 +518,7 @@
       return;
     }
 
-    const data = await ('assign_staff', {
+    const data = await apiFetch('assign_staff', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
