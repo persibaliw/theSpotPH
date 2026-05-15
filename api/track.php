@@ -38,6 +38,7 @@ if (!$booking) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Status — TheSpotPH</title>
+    <link rel="shortcut icon" href="assets/favicon.jpg" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body { 
