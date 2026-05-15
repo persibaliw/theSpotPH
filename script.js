@@ -199,6 +199,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+const dateInput = document.getElementById('b_date');
+
+dateInput.addEventListener('input', function() {
+    if (this.value) {
+        this.style.color = "white";
+    } else {
+        this.style.color = "rgba(255, 255, 255, 0.5)";
+    }
+});
+
+// For the select dropdown color change
+const packageSelect = document.getElementById('b_package');
+packageSelect.addEventListener('change', function() {
+    this.style.color = "white";
+});
+
 // Calendar Navigation
 const prevBtn = document.getElementById("calPrev");
 const nextBtn = document.getElementById("calNext");
