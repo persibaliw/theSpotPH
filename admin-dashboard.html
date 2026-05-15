@@ -379,152 +379,178 @@
     </div>
   </div>
 
-  <script>
-    async function checkAuth() {
-      const res = await fetch('api/api.php?action=get_bookings');
-      const data = await res.json();
-      if (data.error === 'Unauthorized') {
-        window.location.href = 'admin-login.html';
+<script>
+  // Helper to handle API calls with Vercel Rewrites
+  async function apiFetch(endpoint, options = {}) {
+    try {
+      const res = await fetch(`/api/${endpoint}`, options);
+      
+      // If Vercel returns HTML (like a 404 or 403), this catches it before it crashes JSON.parse
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        console.error("Server returned non-JSON response:", await res.text());
+        return { error: 'Server Error' };
       }
+
+      return await res.json();
+    } catch (err) {
+      console.error("API Fetch Error:", err);
+      return { error: 'Connection Error' };
     }
-    checkAuth();
+  }
 
-    let bookings = [];
-    let currentId = null;
+  async function checkAuth() {
+    const data = await apiFetch('get_profile'); // Use profile check for auth
+    if (!data.success) {
+      window.location.href = 'admin-login.html';
+    }
+  }
 
-    // Initialize Select2 when the page is ready
-    $(document).ready(function () {
-      $('.js-staff-multiple').select2({
-        placeholder: "Select staff members...",
-        theme: "classic",
-        width: '100%'
-      });
+  let bookings = [];
+  let currentId = null;
+
+  // Initialize Select2
+  $(document).ready(function () {
+    $('.js-staff-multiple').select2({
+      placeholder: "Select staff members...",
+      theme: "classic",
+      width: '100%'
     });
+  });
 
-    async function fetchBookings() {
-      const res = await fetch('api/api.php?action=get_bookings');
-      const data = await res.json();
-      if (data.error) { window.location.href = 'admin-login.html'; return; }
-      bookings = data;
-      render();
+  async function fetchBookings() {
+    // Vercel Rewrite: /api/get_bookings -> api.php?action=get_bookings
+    const data = await apiFetch('get_bookings');
+    
+    if (data.error === 'Unauthorized') { 
+      window.location.href = 'admin-login.html'; 
+      return; 
+    }
+    
+    // Ensure data is an array
+    bookings = Array.isArray(data) ? data : [];
+    render();
+  }
+
+  function render() {
+    let html = '';
+    let counts = { total: 0, pending: 0, accepted: 0, declined: 0 };
+    
+    bookings.forEach(b => {
+      counts.total++;
+      if (counts[b.status] !== undefined) counts[b.status]++;
+      
+      html += `
+        <tr>
+          <td><strong>${b.name}</strong></td>
+          <td>${b.email}<br><small>${b.phone}</small></td>
+          <td>${b.event_date}</td>
+          <td>${b.package}</td>
+          <td><span class="status ${b.status}">${b.status}</span></td>
+          <td><button class="action-btn" onclick="openModal(${b.id})">Review</button></td>
+        </tr>
+      `;
+    });
+    
+    document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">No bookings found.</td></tr>';
+    document.getElementById('statTotal').innerText = counts.total;
+    document.getElementById('statPending').innerText = counts.pending;
+    document.getElementById('statAccepted').innerText = counts.accepted;
+    document.getElementById('statDeclined').innerText = counts.declined;
+  }
+
+  function openModal(id) {
+    currentId = id;
+    const b = bookings.find(x => x.id == id);
+    if(!b) return;
+
+    document.getElementById('modalInfo').innerHTML = `
+      <p><strong>Name:</strong> ${b.name}</p>
+      <p><strong>Package:</strong> ${b.package}</p>
+      <p><strong>Message:</strong><br>${b.message || '<em>No message provided</em>'}</p>
+      <p><strong>Current Date:</strong> ${b.event_date}</p>
+    `;
+
+    $('.js-staff-multiple').val(null).trigger('change');
+
+    if (b.assigned_user_id) {
+      const staffArray = b.assigned_user_id.split(',');
+      $('.js-staff-multiple').val(staffArray).trigger('change');
     }
 
-    function render() {
-      let html = '';
-      let counts = { total: 0, pending: 0, accepted: 0, declined: 0 };
-      bookings.forEach(b => {
-        counts.total++;
-        if (counts[b.status] !== undefined) counts[b.status]++;
-        html += `
-          <tr>
-            <td><strong>${b.name}</strong></td>
-            <td>${b.email}<br><small>${b.phone}</small></td>
-            <td>${b.event_date}</td>
-            <td>${b.package}</td>
-            <td><span class="status ${b.status}">${b.status}</span></td>
-            <td><button class="action-btn" onclick="openModal(${b.id})">Review</button></td>
-          </tr>
-        `;
-      });
-      document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">No bookings found.</td></tr>';
-      document.getElementById('statTotal').innerText = counts.total;
-      document.getElementById('statPending').innerText = counts.pending;
-      document.getElementById('statAccepted').innerText = counts.accepted;
-      document.getElementById('statDeclined').innerText = counts.declined;
-    }
+    document.getElementById('rescheduleDate').value = b.event_date;
+    document.getElementById('bookingModal').style.display = 'flex';
+  }
 
-    function openModal(id) {
-      currentId = id;
-      const b = bookings.find(x => x.id == id);
+  function closeModal() {
+    document.getElementById('bookingModal').style.display = 'none';
+  }
 
-      // Fill the info section
-      document.getElementById('modalInfo').innerHTML = `
-    <p><strong>Name:</strong> ${b.name}</p>
-    <p><strong>Package:</strong> ${b.package}</p>
-    <p><strong>Message:</strong><br>${b.message || '<em>No message provided</em>'}</p>
-    <p><strong>Current Date:</strong> ${b.event_date}</p>
-  `;
-
-      $('.js-staff-multiple').val(null).trigger('change');
-
-      if (b.assigned_user_id) {
-        const staffArray = b.assigned_user_id.split(',');
-        $('.js-staff-multiple').val(staffArray).trigger('change');
-      }
-
-      document.getElementById('rescheduleDate').value = b.event_date;
-
-      document.getElementById('bookingModal').style.display = 'flex';
-    }
-
-    function closeModal() {
-      document.getElementById('bookingModal').style.display = 'none';
-    }
-
-    async function updateStatus(status) {
-      await fetch('api/api.php?action=update_status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: currentId, status })
-      });
+  async function updateStatus(status) {
+    const data = await apiFetch('update_status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: currentId, status })
+    });
+    
+    if (data.success) {
       closeModal();
       fetchBookings();
     }
+  }
 
-    async function loadStaff() {
-      const res = await fetch('api/api.php?action=get_staff');
-      const staff = await res.json();
-      const select = document.getElementById('staffSelect');
+  async function loadStaff() {
+    const staff = await apiFetch('get_staff');
+    if (!Array.isArray(staff)) return;
 
-      select.innerHTML = ''; // Select2 placeholder handles the "Select staff" text
-      staff.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s.id;
-        opt.textContent = s.name;
-        select.appendChild(opt);
-      });
+    const select = document.getElementById('staffSelect');
+    select.innerHTML = ''; 
+    staff.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.name;
+      select.appendChild(opt);
+    });
+  }
+
+  async function saveAssignment() {
+    const selectedStaffIds = $('#staffSelect').val();
+    const date = document.getElementById('rescheduleDate').value;
+
+    if (!selectedStaffIds || selectedStaffIds.length === 0) {
+      alert("Please select at least one staff member.");
+      return;
     }
 
-    async function saveAssignment() {
-      const selectedStaffIds = $('#staffSelect').val();
-      const date = document.getElementById('rescheduleDate').value;
+    const data = await apiFetch('assign_staff', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        booking_id: currentId,
+        staff_ids: selectedStaffIds.join(','),
+        date: date
+      })
+    });
 
-      if (!selectedStaffIds || selectedStaffIds.length === 0) {
-        alert("Please select at least one staff member.");
-        return;
-      }
-
-      const staffString = selectedStaffIds.join(',');
-
-      // Send assignment to API
-      const res = await fetch('api/api.php?action=assign_staff', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          booking_id: currentId,
-          staff_ids: staffString,
-          date: date
-        })
-      });
-
-      const data = await res.json();
-      if (data.success) {
-        await updateStatus('accepted');
-        alert("Booking assigned and accepted!");
-      } else {
-        alert("Error: " + (data.message || "Could not save assignment."));
-      }
+    if (data.success) {
+      await updateStatus('accepted');
+      alert("Booking assigned and accepted!");
+    } else {
+      alert("Error: " + (data.message || "Could not save assignment."));
     }
+  }
 
-    async function logout() {
-      await fetch('api/api.php?action=logout');
-      window.location.href = 'admin-login.html';
-    }
+  async function logout() {
+    await apiFetch('logout');
+    window.location.href = 'admin-login.html';
+  }
 
-    // INITIALIZE
+  // INITIALIZE
+  checkAuth().then(() => {
     fetchBookings();
-    loadStaff(); 
-  </script>
+    loadStaff();
+  });
+</script>
 </body>
 
 </html>
