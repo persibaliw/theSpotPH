@@ -5,11 +5,16 @@ error_reporting(0);
 ini_set('display_errors', 0);
 
 // --- DATABASE CONNECTION ---
-$host=getenv('DB_HOST');
-$port=getenv('DB_PORT');
-$db=getenv('DB_NAME');
-$user=getenv('DB_USER');
-$pass=getenv('DB_PASS');
+// $host=getenv('DB_HOST');
+// $port=getenv('DB_PORT');
+// $db=getenv('DB_NAME');
+// $user=getenv('DB_USER');
+// $pass=getenv('DB_PASS');
+$host="thespotphdb-thespotph.h.aivencloud.com";
+$port=18667;
+$db="defaultdb";
+$user="avnadmin";
+$pass="AVNS_v56EA402DIGZeEvonj0";
 $ssl_ca = __DIR__ . '/certs/ca.pem'; 
 
 // --- GET ACTION ---
