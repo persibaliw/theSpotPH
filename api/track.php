@@ -7,7 +7,7 @@ $user = getenv('DB_USER');
 $pass = getenv('DB_PASS');
 
 // Since track.php is in the root and certs are in /api/certs/
-$ssl_ca = __DIR__ . '/api/certs/ca.pem'; 
+$ssl_ca = __DIR__ . '/certs/ca.pem';
 
 try {
     $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8";
