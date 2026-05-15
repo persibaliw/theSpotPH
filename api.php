@@ -3,19 +3,33 @@ session_start();
 header('Content-Type: application/json');
 
 // --- DATABASE CONNECTION ---
-$host = 'localhost';
-$db   = 'thespotph';
-$user = 'root'; 
-$pass = '';     
+// --- DATABASE CONNECTION (AIVEN + VERCEL CONFIG) ---
+$host = getenv('DB_HOST');
+$port = getenv('DB_PORT'); // Aiven usually uses a unique port, not 3306
+$db   = getenv('DB_NAME');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASS');
+
+// Path to the Aiven CA certificate you uploaded to your repo
+$ssl_ca = __DIR__ . '/certs/ca.pem'; 
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die(json_encode(['success' => false, 'message' => 'DB Connection failed']));
-}
+    $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8";
+    
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        // SSL is MANDATORY for Aiven
+        PDO::MYSQL_ATTR_SSL_CA => $ssl_ca,
+        // Optional: set to false if you have issues with server cert verification on Vercel
+        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false, 
+    ];
 
-$action = $_GET['action'] ?? '';
+    $pdo = new PDO($dsn, $user, $pass, $options);
+} catch (PDOException $e) {
+    // We use a generic message to hide technical details from users
+    die(json_encode(['success' => false, 'message' => 'Service temporarily unavailable']));
+}
 
 // --- ACTIONS ---
 
