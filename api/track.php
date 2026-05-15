@@ -13,8 +13,8 @@ try {
     $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8";
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::MYSQL_ATTR_SSL_CA => $ssl_ca,
-        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+        PDO::Mysql\ATTR_SSL_CA => $ssl_ca,
+        PDO::Mysql\ATTR_SSL_VERIFY_SERVER_CERT => false,
     ];
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {
