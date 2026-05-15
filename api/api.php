@@ -12,6 +12,10 @@ $user=getenv('DB_USER');
 $pass=getenv('DB_PASS');
 $ssl_ca = __DIR__ . '/certs/ca.pem'; 
 
+if (!file_exists($ssl_ca)) {
+    die(json_encode(['success' => false, 'message' => 'SSL Certificate not found at: ' . $ssl_ca]));
+}
+
 // --- GET ACTION ---
 $action = $_GET['action'] ?? ''; 
 
