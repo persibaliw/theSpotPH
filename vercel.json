@@ -2,9 +2,6 @@
   "functions": {
     "api/*.php": {
       "runtime": "vercel-php@0.9.0"
-    },
-    "track.php": {
-      "runtime": "vercel-php@0.9.0"
     }
   },
   "redirects": [
@@ -18,6 +15,10 @@
     {
       "source": "/api/(.*)",
       "destination": "/api/api.php?action=$1"
+    },
+    {
+      "source": "/track.php",
+      "destination": "/api/track.php"
     }
   ]
 }
