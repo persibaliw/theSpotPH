@@ -96,11 +96,11 @@ elseif ($action === 'get_profile') {
 
 elseif ($action === 'book') {
     $data = json_decode(file_get_contents('php://input'), true);
-    $token = bin2hex(random_bytes(16)); 
+    $token = bin2hex(random_bytes(16));
     $stmt = $pdo->prepare("INSERT INTO bookings (token, name, email, phone, event_date, package, message) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $success = $stmt->execute([$token, $data['name'], $data['email'], $data['phone'], $data['date'], $data['package'], $data['message']]);
     ob_clean();
-    echo json_encode(['success' => $success, 'token' => $token]);
+    echo json_encode(['success' => $success, 'token' => $token]); 
     exit;
 }
 
