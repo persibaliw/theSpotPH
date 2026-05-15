@@ -158,45 +158,46 @@ document.addEventListener('DOMContentLoaded', () => {
   const bookingForm = document.getElementById('bookingForm');
   if (bookingForm) {
     bookingForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('submitBtn');
-      const originalText = btn.innerText;
-
-      btn.innerText = "Sending...";
-      btn.disabled = true;
-
-      const payload = {
-        name: document.getElementById('b_name').value,
-        email: document.getElementById('b_email').value,
-        phone: document.getElementById('b_phone').value,
-        date: document.getElementById('b_date').value,
-        package: pkgSelect ? pkgSelect.value : "",
-        message: document.getElementById('b_message').value
-      };
-
-      try {
-        const res = await fetch('api/api.php?action=book', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-
-        if (data.success) {
-          alert("Thank you! Your booking request has been sent.");
-          bookingForm.reset();
-          renderCalendar();
-        } else {
-          alert("Error: " + (data.message || "Please try again."));
-        }
-      } catch (err) {
-        alert("Network error. Please check your connection.");
-      } finally {
-        btn.innerText = originalText;
-        btn.disabled = false;
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const originalText = btn.innerText;
+  
+    btn.innerText = "Sending...";
+    btn.disabled = true;
+  
+    const payload = {
+      name: document.getElementById('b_name').value,
+      email: document.getElementById('b_email').value,
+      phone: document.getElementById('b_phone').value,
+      date: document.getElementById('b_date').value,
+      package: pkgSelect ? pkgSelect.value : "",
+      message: document.getElementById('b_message').value
+    };
+  
+    try {
+      const res = await fetch('api/api.php?action=book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+  
+      if (data.success) {
+        const trackingUrl = window.location.origin + '/track.php?id=' + data.token;
+        
+        alert("Thank you! Your request has been sent.\n\nYou can track your status here: " + trackingUrl);
+        
+        bookingForm.reset();
+        renderCalendar();
+      } else {
+        alert("Error: " + (data.message || "Please try again."));
       }
-    });
-  }
+    } catch (err) {
+      alert("Network error. Please check your connection.");
+    } finally {
+      btn.innerText = originalText;
+      btn.disabled = false;
+    }
 });
 
 const dateInput = document.getElementById('b_date');
