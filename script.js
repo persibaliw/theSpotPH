@@ -92,7 +92,6 @@ async function renderCalendar() {
   try {
     const res = await fetch('api/api.php?action=get_calendar&user_type=client');
     const data = await res.json();
-    // API returns [{start: "2026-05-14"}, ...]
     bookedDates = data.map(b => b.start);
   } catch (err) {
     console.warn("Could not fetch calendar dates", err);
@@ -186,7 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.success) {
           alert("Thank you! Your booking request has been sent.");
           bookingForm.reset();
-          renderCalendar(); // Refresh to show new "Full" slots if applicable
+          renderCalendar();
         } else {
           alert("Error: " + (data.message || "Please try again."));
         }
