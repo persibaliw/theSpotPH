@@ -385,8 +385,13 @@
 
 <script>
   async function apiFetch(endpoint, options = {}) {
+  const fetchOptions = {
+    ...options,
+    credentials: 'include',
+  };
+
   try {
-    const res = await fetch(`/api/${endpoint}`, options);
+    const res = await fetch(`/api/${endpoint}`, fetchOptions);
     
     const text = await res.text();
     
@@ -555,10 +560,22 @@
   }
 
   // INITIALIZE
-  checkAuth().then(() => {
-    fetchBookings();
-    loadStaff();
-  });
+  (async () => {
+    try {
+        const auth = await checkAuth(); 
+        
+        // Add a 300ms "Settling" delay for Vercel Session synchronization
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Run these one by one to avoid hitting the DB/Session too fast
+        await fetchBookings();
+        await loadStaff();
+        
+        console.log("Dashboard fully loaded.");
+    } catch (err) {
+        console.error("Initialization failed:", err);
+    }
+  })();
 </script>
 </body>
 
