@@ -385,22 +385,27 @@
 
 <script>
   async function apiFetch(endpoint, options = {}) {
-    try {
-      const res = await fetch(`/api/${endpoint}`, options);
-      
-      // If Vercel returns HTML (like a 404 or 403), this catches it before it crashes JSON.parse
-      const contentType = res.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        console.error("Server returned non-JSON response:", await res.text());
-        return { error: 'Server Error' };
-      }
-
-      return await res.json();
-    } catch (err) {
-      console.error("API Fetch Error:", err);
-      return { error: 'Connection Error' };
+  try {
+    const res = await fetch(`/api/${endpoint}`, options);
+    
+    const text = await res.text();
+    
+    if (!text || text.trim() === "") {
+      console.error(`Empty response from ${endpoint}`);
+      return [];
     }
+
+    try {
+      return JSON.parse(text);
+    } catch (parseErr) {
+      console.error("JSON Parse Error. Server sent:", text);
+      return { error: 'Invalid JSON' };
+    }
+  } catch (err) {
+    console.error("API Fetch Error:", err);
+    return { error: 'Connection Error' };
   }
+}
 
   async function checkAuth() {
     const data = await apiFetch('get_profile');
