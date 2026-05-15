@@ -72,7 +72,8 @@ if ($action === 'login') {
         echo json_encode(['success' => false, 'message' => 'Invalid credentials']);
     }
     exit;
-
+}
+    
 elseif ($action === 'get_profile') {
     $user_id = $_SESSION['user_id'] ?? null;
     if (!$user_id) {
