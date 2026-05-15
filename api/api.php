@@ -1,4 +1,15 @@
 <?php
+ini_set('session.save_path', '/tmp');
+
+session_set_cookie_params([
+    'lifetime' => 86400,
+    'path' => '/',
+    'domain' => '',
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'None'
+]);
+
 ob_start(); 
 error_reporting(0);
 ini_set('display_errors', 0);
