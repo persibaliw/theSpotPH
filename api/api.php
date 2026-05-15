@@ -24,9 +24,11 @@ try {
         PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false, 
     ];
     $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    // If this fails, visit /api/login directly in your browser to see why
-    die(json_encode(['success' => false, 'message' => 'Connection Error']));
+// } catch (PDOException $e) {
+//     die(json_encode(['success' => false, 'message' => 'Connection Error']));
+// }
+    } catch (PDOException $e) {
+    die(json_encode(['success' => false, 'message' => $e->getMessage()]));
 }
 
 // --- ACTIONS ---
