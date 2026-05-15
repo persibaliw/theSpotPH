@@ -60,7 +60,7 @@ if ($action === 'login') {
 
     if ($userRecord && ($inputPassword === $userRecord['password'] || md5($inputPassword) === $userRecord['password'])) {
         $_SESSION['user_id'] = $userRecord['id'];
-        $_SESSION['role'] = $userRecord['role'];
+        $_SESSION['role'] = strtolower($userRecord['role']);
         $_SESSION['full_name'] = $userRecord['full_name'];
         
         ob_clean();
