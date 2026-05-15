@@ -839,6 +839,24 @@ body {
     border-color: var(--accent);
 }
 
+.form-container input[type="date"]:not(.has-value):before {
+    content: "Event Date";
+    color: rgba(255, 255, 255, 0.5);
+    margin-right: 0.5em;
+    font-family: 'Outfit', sans-serif;
+}
+
+.form-container input[type="date"].has-value:before {
+    content: "";
+    display: none;
+}
+
+.form-container input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+    color: white;
+    min-height: 20px;
+}
+
 .calendar-home {
     padding: 80px 20px;
     background: var(--base);
