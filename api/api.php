@@ -26,9 +26,12 @@ try {
     ];
 
     $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    // We use a generic message to hide technical details from users
-    die(json_encode(['success' => false, 'message' => 'Service temporarily unavailable']));
+// } catch (PDOException $e) {
+//     // We use a generic message to hide technical details from users
+//     die(json_encode(['success' => false, 'message' => 'Service temporarily unavailable']));
+// }
+    } catch (PDOException $e) {
+    die(json_encode(['success' => false, 'message' => $e->getMessage()]));
 }
 
 // --- ACTIONS ---
