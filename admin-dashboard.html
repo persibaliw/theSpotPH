@@ -398,7 +398,7 @@
   }
 
   async function checkAuth() {
-    const data = await apiFetch('api.php?action=get_profile');
+    const data = await apiFetch('get_profile');
     if (!data.success) {
       window.location.href = 'admin-login.html';
     }
@@ -416,7 +416,7 @@
   });
 
   async function fetchBookings() {
-    const data = await apiFetch('api.php?action=get_bookings');
+    const data = await apiFetch('get_bookings');
     
     if (data.error === 'Unauthorized') { 
       window.location.href = 'admin-login.html'; 
@@ -496,7 +496,7 @@
   }
 
   async function loadStaff() {
-    const staff = await ('api.php?action=get_staff');
+    const staff = await ('get_staff');
     if (!Array.isArray(staff)) return;
 
     const select = document.getElementById('staffSelect');
@@ -518,7 +518,7 @@
       return;
     }
 
-    const data = await ('api.php?action=assign_staff', {
+    const data = await ('assign_staff', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -537,7 +537,7 @@
   }
 
   async function logout() {
-    await apiFetch('api.php?action=logout');
+    await apiFetch('logout');
     window.location.href = 'admin-login.html';
   }
 
