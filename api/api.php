@@ -51,7 +51,6 @@ if ($action === 'book') {
     echo json_encode(['success' => $success, 'token' => $token]);
 }
 
-// Unified Login
 elseif ($action === 'login') {
     $data = json_decode(file_get_contents('php://input'), true);
     $email = $data['email'] ?? '';
@@ -62,11 +61,11 @@ elseif ($action === 'login') {
     $stmt->execute([$email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // FIX: Check plain text (staff) AND MD5 (admin) from your SQL data
     if ($user && ($password === $user['password'] || md5($password) === $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
-        $_SESSION['role'] = $user['role']; // Store role in session for security
+        $_SESSION['role'] = $user['role'];
         
-        // Send role back to JS for redirection
         echo json_encode([
             'success' => true, 
             'role' => $user['role']
@@ -77,6 +76,7 @@ elseif ($action === 'login') {
             'message' => 'Invalid email or password'
         ]);
     }
+}
 
 // Admin: Fetch All Bookings
 elseif ($action === 'get_bookings') {
