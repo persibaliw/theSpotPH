@@ -716,6 +716,40 @@ body {
     margin: 0 auto;
 }
 
+.form-container input,
+.form-container textarea,
+.form-container select {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    background: rgba(27, 27, 27, 0.7);
+    font-family: 'Outfit', sans-serif;
+    font-size: 16px; /* 16px prevents iOS from auto-zooming on focus */
+    backdrop-filter: blur(5px);
+    display: block;
+    box-sizing: border-box;
+}
+
+.form-container input[type="date"] {
+    appearance: none;
+    -webkit-appearance: none;
+    min-height: 48px;
+}
+
+.form-container input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+    height: 48px;
+    line-height: 48px;
+    color: white;
+}
+
+.form-container input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
 .form-row {
     display: flex;
     gap: 12px;
