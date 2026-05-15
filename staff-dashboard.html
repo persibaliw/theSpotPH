@@ -259,63 +259,80 @@
         </div>
     </div>
     <script>
-        async function loadProfile() {
-            try {
-                const res = await fetch('api/api.php?action=get_profile');
-                const data = await res.json();
+    async function apiFetch(endpoint) {
+        const res = await fetch(`/api/${endpoint}`);
+        return await res.json();
+    }
 
-                if (data.success) {
-                    document.getElementById('staffName').innerText = data.full_name;
-                } else {
-                    window.location.href = 'admin-login.html';
-                }
-            } catch (err) {
-                console.error("Failed to load profile", err);
+    async function loadProfile() {
+        try {
+            const data = await apiFetch('get_profile');
+
+            if (data.success) {
+                document.getElementById('staffName').innerText = data.full_name;
+            } else {
+                window.location.href = 'admin-login.html';
             }
+        } catch (err) {
+            console.error("Failed to load profile", err);
         }
+    }
 
-        loadProfile();
+    let assignments = [];
 
-        let assignments = [];
-
-        async function loadData() {
-            const res = await fetch('api.php?action=get_calendar&user_type=staff');
+    async function loadData() {
+        try {
+            const res = await fetch('/api/get_calendar?user_type=staff');
             assignments = await res.json();
+            
             const body = document.getElementById('tableBody');
             const statTotal = document.getElementById('statTotal');
             const nextEvent = document.getElementById('nextEvent');
-            if (assignments.length > 0) {
+
+            if (Array.isArray(assignments) && assignments.length > 0) {
                 statTotal.innerText = assignments.length;
                 nextEvent.innerText = assignments[0].start;
                 body.innerHTML = assignments.map(a => `
-          <tr>
-            <td>${a.start}</td>
-            <td>${a.title}</td>
-            <td>${a.package || 'Standard'}</td>
-            <td><button class="btn-view" onclick="openModal(${a.id})">View</button></td>
-          </tr>
-        `).join('');
+                    <tr>
+                        <td>${a.start}</td>
+                        <td>${a.title}</td>
+                        <td>${a.package || 'Standard'}</td>
+                        <td><button class="btn-view" onclick="openModal(${a.id})">View</button></td>
+                    </tr>
+                `).join('');
             } else {
                 body.innerHTML = '<tr><td colspan="4" style="text-align:center;">No events assigned.</td></tr>';
             }
+        } catch (err) {
+            console.error("Error loading calendar data:", err);
         }
+    }
 
-        function openModal(id) {
-            const b = assignments.find(x => x.id == id);
-            document.getElementById('modalInfo').innerHTML = `
-        <p><strong>Event:</strong> ${b.title}</p>
-        <p><strong>Date:</strong> ${b.start}</p>
-        <p><strong>Notes:</strong><br>${b.message || 'None'}</p>
-      `;
-            document.getElementById('modal').style.display = 'flex';
-        }
+    function openModal(id) {
+        const b = assignments.find(x => x.id == id);
+        if (!b) return;
+        document.getElementById('modalInfo').innerHTML = `
+            <p><strong>Event:</strong> ${b.title}</p>
+            <p><strong>Date:</strong> ${b.start}</p>
+            <p><strong>Notes:</strong><br>${b.message || 'None'}</p>
+        `;
+        document.getElementById('modal').style.display = 'flex';
+    }
 
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function closeModal() { 
+        document.getElementById('modal').style.display = 'none'; 
+    }
 
-        async function logout() { await fetch('api.php?action=logout'); window.location.href = "admin-login.html"; }
-        document.getElementById('currentDate').innerText = new Date().toDateString();
-        loadData();
-    </script>
+    async function logout() { 
+        await fetch('/api/logout'); 
+        window.location.href = "admin-login.html"; 
+    }
+
+    // Initialize
+    document.getElementById('currentDate').innerText = new Date().toDateString();
+    loadProfile();
+    loadData();
+</script>
 </body>
 
 </html>
