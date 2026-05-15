@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TheSpotPH — Admin Login</title>
+  <link rel="shortcut icon" href="assets/favicon.jpg" type="image/x-icon">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --base: #182339;
+      --accent: #cfc7b0;
+      --error: #e05252;
+      --white: #fff;
+    }
+
+    body {
+      background: var(--base);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: "Outfit", sans-serif;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 200px;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: min(420px, 92vw);
+      padding: 52px 44px 44px;
+      border: 1px solid rgba(207, 199, 176, 0.15);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), -4px 4px 0 rgba(207, 199, 176, 0.08);
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .back-homepage {
+      text-decoration: none;
+    }
+
+    .brand h1 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--accent);
+    }
+
+    .brand p {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(207, 199, 176, 0.45);
+      margin-top: 4px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(207, 199, 176, 0.6);
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(207, 199, 176, 0.2);
+      border-radius: 3px;
+      color: var(--white);
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 28px;
+      padding: 14px;
+      background: var(--accent);
+      color: var(--base);
+      border: none;
+      border-radius: 3px;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #bdb5a0;
+    }
+
+    .error-msg {
+      display: none;
+      margin-top: 16px;
+      padding: 10px;
+      text-align: center;
+      color: var(--error);
+      background: rgba(224, 82, 82, 0.1);
+      border-radius: 3px;
+      font-size: 0.85rem;
+    }
+
+    .error-msg.show {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <div class="brand">
+      <a href="homepage.html" class="back-homepage"><h1>The SpotPH</h1></a>
+      <p>Admin Portal</p>
+    </div>
+    <form id="loginForm">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" required />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" required />
+      </div>
+      <button class="btn" type="submit" id="loginBtn">Sign In</button>
+      <div class="error-msg" id="errorMsg"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+      const loginBtn = document.getElementById("loginBtn");
+
+      // Clear previous errors and show loading state
+      errorMsg.classList.remove("show");
+      loginBtn.innerText = "Authenticating...";
+      loginBtn.disabled = true;
+
+      try {
+        const res = await fetch('api.php?action=login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          // Redirect based on the role returned from api.php
+          if (data.role === 'admin') {
+            window.location.href = "admin-dashboard.html";
+          } else if (data.role === 'staff') {
+            window.location.href = "staff-dashboard.html";
+          } else {
+            // Fallback if role is undefined or unknown
+            errorMsg.innerText = "Account role not recognized. Contact Admin.";
+            errorMsg.classList.add("show");
+            loginBtn.innerText = "Sign In";
+            loginBtn.disabled = false;
+          }
+        } else {
+          errorMsg.innerText = data.message || "Invalid credentials.";
+          errorMsg.classList.add("show");
+          loginBtn.innerText = "Sign In";
+          loginBtn.disabled = false;
+        }
+      } catch (err) {
+        errorMsg.innerText = "Connection error. Please try again.";
+        errorMsg.classList.add("show");
+        loginBtn.innerText = "Sign In";
+        loginBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+
+</html>

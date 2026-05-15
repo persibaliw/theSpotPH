@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TheSpotPH — Staff Dashboard</title>
+    <link rel="shortcut icon" href="assets/favicon.jpg" type="image/x-icon">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --base: #182339;
+            --accent: #cfc7b0;
+            --card: rgba(255, 255, 255, 0.03);
+            --border: rgba(207, 199, 176, 0.15);
+        }
+
+        body {
+            margin: 0;
+            font-family: "Outfit", sans-serif;
+            background: var(--base);
+            color: #c8c0a9;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #111827;
+            padding: 30px 20px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 40px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            flex-grow: 1;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            background: var(--card);
+            color: var(--accent);
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            color: #e05252;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(224, 82, 82, 0.1);
+        }
+
+        .main {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-family: "Cormorant Garamond", serif;
+            font-size: 2.2rem;
+            margin: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-top: 10px;
+        }
+
+        .content-card {
+            background: var(--card);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            text-align: left;
+            color: var(--accent);
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+
+        .btn-view {
+            background: none;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .btn-view:hover {
+            background: var(--accent);
+            color: var(--base);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-content h3 {
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .btn-close {
+            background: var(--accent);
+            color: var(--base);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="brand">
+            <h2>TheSpotPH</h2>
+            <small id="staffName">Loading...</small>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active">My Schedule</a>
+            <a href="#" class="nav-link">Account Settings</a>
+        </div>
+        <div class="logout-btn" onclick="logout()">Sign Out</div>
+    </div>
+    <div class="main">
+        <div class="header">
+            <h1>Staff Dashboard</h1>
+            <div id="currentDate" style="color: var(--accent);"></div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Assigned Events</div>
+                <div class="stat-value" id="statTotal">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Next Booking</div>
+                <div class="stat-value" id="nextEvent" style="font-size: 1.5rem;">None</div>
+            </div>
+        </div>
+        <div class="content-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Event Name</th>
+                        <th>Package</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3>Event Information</h3>
+            <div id="modalInfo"></div>
+            <div style="margin-top:20px; text-align:right;">
+                <button class="btn-close" onclick="closeModal()">Dismiss</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        async function loadProfile() {
+            try {
+                const res = await fetch('api.php?action=get_profile');
+                const data = await res.json();
+
+                if (data.success) {
+                    document.getElementById('staffName').innerText = data.full_name;
+                } else {
+                    window.location.href = 'admin-login.html';
+                }
+            } catch (err) {
+                console.error("Failed to load profile", err);
+            }
+        }
+
+        loadProfile();
+
+        let assignments = [];
+
+        async function loadData() {
+            const res = await fetch('api.php?action=get_calendar&user_type=staff');
+            assignments = await res.json();
+            const body = document.getElementById('tableBody');
+            const statTotal = document.getElementById('statTotal');
+            const nextEvent = document.getElementById('nextEvent');
+            if (assignments.length > 0) {
+                statTotal.innerText = assignments.length;
+                nextEvent.innerText = assignments[0].start;
+                body.innerHTML = assignments.map(a => `
+          <tr>
+            <td>${a.start}</td>
+            <td>${a.title}</td>
+            <td>${a.package || 'Standard'}</td>
+            <td><button class="btn-view" onclick="openModal(${a.id})">View</button></td>
+          </tr>
+        `).join('');
+            } else {
+                body.innerHTML = '<tr><td colspan="4" style="text-align:center;">No events assigned.</td></tr>';
+            }
+        }
+
+        function openModal(id) {
+            const b = assignments.find(x => x.id == id);
+            document.getElementById('modalInfo').innerHTML = `
+        <p><strong>Event:</strong> ${b.title}</p>
+        <p><strong>Date:</strong> ${b.start}</p>
+        <p><strong>Notes:</strong><br>${b.message || 'None'}</p>
+      `;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        async function logout() { await fetch('api.php?action=logout'); window.location.href = "admin-login.html"; }
+        document.getElementById('currentDate').innerText = new Date().toDateString();
+        loadData();
+    </script>
+</body>
+
+</html>

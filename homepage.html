@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="assets/favicon.jpg" type="image/x-icon">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <title>TheSpotPH</title>
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar" id="navbar">
+      <div class="nav-inner">
+        <a href="#top" class="navlogo">
+          <img src="assets/TheSpotPH.png" alt="TheSpotPH Logo" />
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li class="btn-booknow"><a href="#booking">Book Now</a></li>
+        </ul>
+
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#menu" onclick="closeMob()">Menu</a>
+    <a href="#services" onclick="closeMob()">Services</a>
+    <a href="#gallery" onclick="closeMob()">Gallery</a>
+    <a href="#booking" onclick="closeMob()" class="mob-book">Book Now</a>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="front-page" id="top">
+      <div class="hero-gallery">
+        <div class="slide">
+          <img src="assets/gallery1.jpg" alt="Night Event" />
+        </div>
+      </div>
+      <div class="hero">
+        <h1>The Party Begins With Us</h1>
+        <p>
+          Premium mobile bartending for weddings, corporate events, and
+          unforgettable celebrations.
+        </p>
+        <p>
+          Whether it's a lavish occasion or an intimate gathering, we deliver
+          high quality drinks and services.
+        </p>
+        <button class="cta" onclick="
+              document
+                .getElementById('booking')
+                .scrollIntoView({ behavior: 'smooth' })
+            ">
+          Book Your Event
+        </button>
+      </div>
+    </section>
+
+    <!-- MENU -->
+    <section class="menu-bg" id="menu">
+      <div class="divider"></div>
+      <div class="menu">
+        <h1>Tastes that hits the <em>Spot</em></h1>
+        <p>Expertly crafted drinks for every taste and occasion.</p>
+        <div class="drinks">
+          <div class="drink-card">
+            <img src="assets/tequila-sunrise(stock).jpg" alt="Tequila Sunrise" />
+            <h3>Tequila Sunrise</h3>
+            <p>
+              A vibrant blend of tequila, orange juice, and grenadine creating
+              a stunning sunrise effect
+            </p>
+          </div>
+          <div class="drink-card">
+            <img src="assets/blue-lagoon.jpg" alt="Blue Lagoon" />
+            <h3>Blue Lagoon</h3>
+            <p>
+              A refreshing non-alcoholic drink with blue curaçao syrup,
+              lemonade, and a splash of sprite
+            </p>
+          </div>
+          <div class="drink-card">
+            <img src="assets/manila-twilight.jpg" alt="Manila Twilight" />
+            <h3>Manila Twilight</h3>
+            <p>
+              A local favorite with tropical flavors that capture the spirit
+              of the city at night
+            </p>
+          </div>
+          <div class="drink-card">
+            <img src="assets/grenadine-cooler.jpg" alt="Grenadine Drink" />
+            <h3>Grenadine Cooler</h3>
+            <p>
+              A sweet and tangy mocktail with grenadine, citrus, and a
+              sparkling finish
+            </p>
+          </div>
+        </div>
+        <div class="menu-customize">
+          <a href="#booking"><em>Want to customize your own menu?</em></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PACKAGES -->
+    <section class="packages-section" id="services">
+      <div class="divider"></div>
+      <div class="packages-intro">
+        <h1>Our Packages</h1>
+        <p>
+          Choose the perfect package for your event or let us create a custom
+          solution.
+        </p>
+      </div>
+      <div class="packages-grid">
+        <div class="pkg-card">
+          <h2>Starter Package</h2>
+          <div class="price">₱5,000</div>
+          <div class="duration">Up to 3 hours &bull; Up to 50 guests</div>
+          <ul>
+            <li>2 Professional Bartenders</li>
+            <li>Basic Bar Setup</li>
+            <li>2 Signature Cocktails</li>
+            <li>2 Mocktail Options</li>
+            <li>Standard Glassware</li>
+            <li>Basic Garnishes</li>
+          </ul>
+          <button type="button" class="book-btn" data-package="Starter Package" onclick="
+                document
+                  .getElementById('booking')
+                  .scrollIntoView({ behavior: 'smooth' })
+              ">
+            Book This Package
+          </button>
+        </div>
+        <div class="pkg-card featured">
+          <h2>Premium Package</h2>
+          <div class="price">₱10,000</div>
+          <div class="duration">Up to 5 hours &bull; Up to 100 guests</div>
+          <ul>
+            <li>3 Professional Bartenders</li>
+            <li>Full Mobile Bar Setup</li>
+            <li>4 Signature Cocktails</li>
+            <li>4 Mocktail Options</li>
+            <li>Premium Glassware</li>
+            <li>Fresh Fruit Garnishes</li>
+            <li>Custom Drink Menu</li>
+            <li>Bar Decorations</li>
+          </ul>
+          <button type="button" class="book-btn" data-package="Premium Package" onclick="
+                document
+                  .getElementById('booking')
+                  .scrollIntoView({ behavior: 'smooth' })
+              ">
+            Book This Package
+          </button>
+        </div>
+        <div class="pkg-card">
+          <h2>Luxury Package</h2>
+          <div class="price">₱15,000</div>
+          <div class="duration">Up to 8 hours &bull; Up to 150 guests</div>
+          <ul>
+            <li>3+ Professional Bartenders</li>
+            <li>Luxury Mobile Bar Setup</li>
+            <li>Unlimited Cocktail Options</li>
+            <li>Unlimited Mocktail Options</li>
+            <li>Premium Glassware</li>
+            <li>Exotic Garnishes & Ingredients</li>
+            <li>Custom Branded Menu</li>
+            <li>Premium Spirits Selection</li>
+            <li>Full Bar Decorations</li>
+          </ul>
+          <button type="button" class="book-btn" data-package="Luxury Package" onclick="
+                document
+                  .getElementById('booking')
+                  .scrollIntoView({ behavior: 'smooth' })
+              ">
+            Book This Package
+          </button>
+        </div>
+      </div>
+      <div class="packages-cta">
+        <a href="#booking"><em>Need something different? We offer fully customizable
+            packages!</em></a>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="gallery-section" id="gallery">
+      <div class="gallery-intro">
+        <h1>Event Gallery</h1>
+        <p>A glimpse of our mobile bar in action.</p>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/photo.php?fbid=122117919483213683&type=3" target="_blank"
+            rel="noopener"><img src="assets/gallery1.jpg" alt="View from the bar-side" /></a>
+          <p>View from the bar-side.</p>
+        </div>
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/photo.php?fbid=122117919591213683&type=3" target="_blank"
+            rel="noopener"><img src="assets/gallery2.jpg" alt="Endless laughter" /></a>
+          <p>Endless laughter and enjoyment.</p>
+        </div>
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/photo/?fbid=122118137955213683" target="_blank" rel="noopener"><img
+              src="assets/gallery3.jpg" alt="House party" /></a>
+          <p>House party and nobody went home early.</p>
+        </div>
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/photo.php?fbid=122118137493213683&type=3" target="_blank"
+            rel="noopener"><img src="assets/gallery4.jpg" alt="Instagram worthy" /></a>
+          <p>Instagram worthy photo.</p>
+        </div>
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/photo.php?fbid=122111315433213683&type=3" target="_blank"
+            rel="noopener"><img src="assets/gallery5.jpg" alt="Color blue" /></a>
+          <p>The color blue has never been this cool.</p>
+        </div>
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/photo.php?fbid=122117919987213683&type=3" target="_blank"
+            rel="noopener"><img src="assets/gallery6.jpg" alt="Bar view" /></a>
+          <p>The serenity of the bar view.</p>
+        </div>
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/photo.php?fbid=122111315547213683&type=3" target="_blank"
+            rel="noopener"><img src="assets/gallery7.jpg" alt="Bartenders serving" /></a>
+          <p>Our bartenders serving.</p>
+        </div>
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/photo.php?fbid=122108641191213683&type=3" target="_blank"
+            rel="noopener"><img src="assets/gallery8.jpg" alt="Cheers" /></a>
+          <p>Cheers to Genrev &amp; Sophia!</p>
+        </div>
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/permalink.php?story_fbid=pfbid0U8PG8T2reeAHcuJ7onaFmb5EFanyLyz3vSxa4NFfxYZuirjYeh9Zy3irnegwnSA5l&id=61586410500351"
+            target="_blank" rel="noopener"><img src="assets/gallery9.jpg" alt="Cheers To John & Miles" /></a>
+          <p>To a lifetime of love and happiness.</p>
+        </div>
+        <div class="gallery-item">
+          <a href="https://www.facebook.com/permalink.php?story_fbid=pfbid034BfdSt2Ne6HYjD599c5XJ3CWFsFZpZjaYHvq176JUF3HMPxHHjFWW48ihUGaCLTyl&id=61586410500351"
+            target="_blank" rel="noopener"><img src="assets/gallery10.jpg" alt="Cheers" /></a>
+          <p>Raise your glasses, because we’re just getting started!</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="calendar-home">
+      <div class="gallery-intro">
+        <h1>The SpotPH's Schedule</h1>
+        <p>See what date works for you.</p>
+      </div>
+      <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+
+      <div id='availabilityCalendar'></div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          var calendarEl = document.getElementById('availabilityCalendar');
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+              left: 'prev',
+              center: 'title',
+              right: 'next'
+            },
+            // This pulls live data from your api.php
+            events: 'api.php?action=get_calendar&user_type=client',
+
+            eventBackgroundColor: '#e05252', // Red for booked
+            eventTextColor: '#ffffff',
+
+            // When a user clicks a date, auto-fill the booking form
+            dateClick: function (info) {
+              const dateInput = document.getElementById('b_date');
+              if (dateInput) {
+                dateInput.value = info.dateStr;
+                // Trigger the 'has-value' logic from your script
+                dateInput.classList.add('has-value');
+                // Smooth scroll to the form
+                document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+              }
+            }
+          });
+          calendar.render();
+        });
+      </script>
+    </section>
+
+    <!-- BOOKING -->
+    <section class="booking-section" id="booking">
+      <div class="booking-container">
+        <h1>Ready to Book Your Event?</h1>
+        <p class="subtitle">
+          Let's make your next event unforgettable. Get in touch today for a
+          custom quote.
+        </p>
+
+        <div class="contact-cards">
+          <div class="card">
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=spotph.13@gmaiL.com&su=
+                            Inquiry&body=Good%20day%2C%0A%0AI%20would%20like%20to%20inquire%20about%20SpotPH%20and%20the%20services%20you%20offer.
+                            %0A%0AThank%20you%2C%0A" target="_blank">
+              <div class="icon">
+                <img src="assets/mail.png" alt="email" />
+              </div>
+              <h3>Email Us</h3>
+            </a>
+            <p>spotph.13@gmail.com</p>
+          </div>
+          <div class="card">
+            <a href="tel:+639562034058">
+              <div class="icon">
+                <img src="assets/phone.png" alt="phone" />
+              </div>
+              <h3>Call Us</h3>
+            </a>
+            <p>0956 203 4058</p>
+          </div>
+          <div class="card">
+            <a href="https://www.google.com/maps/search/?api=1&query=Imus+Cavite" target="_blank"
+              rel="noopener noreferrer">
+              <div class="icon">
+                <img src="assets/pinpoint.png" alt="location-point" />
+              </div>
+              <h3>Service Area</h3>
+            </a>
+            <p>Greater Manila</p>
+          </div>
+        </div>
+
+        <p class="form-label">Or fill out our quick booking form:</p>
+        <div class="form-container">
+          <form id="bookingForm">
+            <div class="form-row">
+              <input type="text" id="b_name" placeholder="Your Name" required />
+              <input type="email" id="b_email" placeholder="Your Email" required />
+            </div>
+            <div class="form-row">
+              <input type="text" id="b_phone" placeholder="Phone Number" />
+              <input type="date" id="b_date" required />
+            </div>
+            <div class="form-row">
+              <select id="b_package" name="package" required>
+                <option value="" disabled selected>Select a Package</option>
+                <option value="Starter Package">Starter Package</option>
+                <option value="Premium Package">Premium Package</option>
+                <option value="Luxury Package">Luxury Package</option>
+              </select>
+            </div>
+            <textarea id="b_message" placeholder="Tell us about your event..."></textarea>
+            <button type="submit" id="submitBtn">Request a Quote</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-left">
+          <span class="footer-logo">The SpotPH</span>
+          <p class="footer-desc">
+            Bringing premium mobile bartending services to your special
+            events. Professional, reliable, and unforgettable.
+          </p>
+          <div class="socials">
+            <a href="https://www.facebook.com/share/18Y4JitNHE" target="_blank" rel="noopener"
+              aria-label="Facebook">f</a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <h3>Quick Links</h3>
+          <a href="#top">Home</a>
+          <a href="#menu">Menu</a>
+          <a href="#services">Services</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#booking">Booking</a>
+        </div>
+        <div class="footer-right">
+          <h3>Contact</h3>
+          <p>spotph.13@gmail.com</p>
+          <p>0956 203 4058</p>
+          <p>Imus, Cavite</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <a href="admin-login.html">
+          <p>© 2026 The SpotPH. All rights reserved.</p>
+        </a>
+      </div>
+    </footer>
+  </main>
+  <script src="script.js"></script>
+</body>
+
+</html>
