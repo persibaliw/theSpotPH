@@ -381,7 +381,7 @@
 
   <script>
     async function checkAuth() {
-      const res = await fetch('api.php?action=get_bookings');
+      const res = await fetch('api/api.php?action=get_bookings');
       const data = await res.json();
       if (data.error === 'Unauthorized') {
         window.location.href = 'admin-login.html';
@@ -402,7 +402,7 @@
     });
 
     async function fetchBookings() {
-      const res = await fetch('api.php?action=get_bookings');
+      const res = await fetch('api/api.php?action=get_bookings');
       const data = await res.json();
       if (data.error) { window.location.href = 'admin-login.html'; return; }
       bookings = data;
@@ -462,7 +462,7 @@
     }
 
     async function updateStatus(status) {
-      await fetch('api.php?action=update_status', {
+      await fetch('api/api.php?action=update_status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: currentId, status })
@@ -472,7 +472,7 @@
     }
 
     async function loadStaff() {
-      const res = await fetch('api.php?action=get_staff');
+      const res = await fetch('api/api.php?action=get_staff');
       const staff = await res.json();
       const select = document.getElementById('staffSelect');
 
@@ -497,7 +497,7 @@
       const staffString = selectedStaffIds.join(',');
 
       // Send assignment to API
-      const res = await fetch('api.php?action=assign_staff', {
+      const res = await fetch('api/api.php?action=assign_staff', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -509,7 +509,6 @@
 
       const data = await res.json();
       if (data.success) {
-        // Automatically set status to accepted after assigning
         await updateStatus('accepted');
         alert("Booking assigned and accepted!");
       } else {
@@ -518,7 +517,7 @@
     }
 
     async function logout() {
-      await fetch('api.php?action=logout');
+      await fetch('api/api.php?action=logout');
       window.location.href = 'admin-login.html';
     }
 
