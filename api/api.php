@@ -63,7 +63,7 @@ elseif ($action === 'login') {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Check password (using plain text for now as per your setup)
-    if ($user && $password === $user['password']) {
+    if ($user && ($password === $user['password'] || md5($password) === $user['password'])) { {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['role'] = $user['role']; // Store role in session for security
         
