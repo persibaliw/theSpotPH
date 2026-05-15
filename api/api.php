@@ -60,11 +60,9 @@ if ($action === 'login') {
 
     if ($userRecord && ($inputPassword === $userRecord['password'] || md5($inputPassword) === $userRecord['password'])) {
         $_SESSION['user_id'] = $userRecord['id'];
-        $_SESSION['role'] = strtolower($userRecord['role']); // Keep this for consistency
+        $_SESSION['role'] = strtolower($userRecord['role']);
         $_SESSION['full_name'] = $userRecord['full_name'];
         
-        // --- ADD THIS LINE ---
-        // This saves the session data and releases the file lock immediately
         session_write_close(); 
         
         ob_clean();
