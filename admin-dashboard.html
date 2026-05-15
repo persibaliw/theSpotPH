@@ -295,7 +295,6 @@
       border: 1px solid var(--border) !important;
     }
 
-    /* Fix the dropdown list background */
     .select2-dropdown {
       background-color: #111827 !important;
       color: white !important;
@@ -380,7 +379,6 @@
   </div>
 
 <script>
-  // Helper to handle API calls with Vercel Rewrites
   async function apiFetch(endpoint, options = {}) {
     try {
       const res = await fetch(`/api/${endpoint}`, options);
@@ -400,7 +398,7 @@
   }
 
   async function checkAuth() {
-    const data = await apiFetch('get_profile'); // Use profile check for auth
+    const data = await apiFetch('api.php?action=get_profile');
     if (!data.success) {
       window.location.href = 'admin-login.html';
     }
@@ -409,7 +407,6 @@
   let bookings = [];
   let currentId = null;
 
-  // Initialize Select2
   $(document).ready(function () {
     $('.js-staff-multiple').select2({
       placeholder: "Select staff members...",
@@ -419,8 +416,7 @@
   });
 
   async function fetchBookings() {
-    // Vercel Rewrite: /api/get_bookings -> api.php?action=get_bookings
-    const data = await apiFetch('get_bookings');
+    const data = await apiFetch('api.php?action=get_bookings');
     
     if (data.error === 'Unauthorized') { 
       window.location.href = 'admin-login.html'; 
@@ -487,7 +483,7 @@
   }
 
   async function updateStatus(status) {
-    const data = await apiFetch('update_status', {
+    const data = await ('update_status', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: currentId, status })
@@ -500,7 +496,7 @@
   }
 
   async function loadStaff() {
-    const staff = await apiFetch('get_staff');
+    const staff = await ('api.php?action=get_staff');
     if (!Array.isArray(staff)) return;
 
     const select = document.getElementById('staffSelect');
@@ -522,7 +518,7 @@
       return;
     }
 
-    const data = await apiFetch('assign_staff', {
+    const data = await ('api.php?action=assign_staff', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -541,7 +537,7 @@
   }
 
   async function logout() {
-    await apiFetch('logout');
+    await apiFetch('api.php?action=logout');
     window.location.href = 'admin-login.html';
   }
 
