@@ -17,7 +17,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "dest": "/api/api.php?action=$1"
+      "destination": "/api/api.php?action=$1"
     }
   ]
 }
