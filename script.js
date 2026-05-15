@@ -90,7 +90,7 @@ async function renderCalendar() {
 
   // Fetch live availability from API
   try {
-    const res = await fetch('api.php?action=get_calendar&user_type=client');
+    const res = await fetch('api/api.php?action=get_calendar&user_type=client');
     const data = await res.json();
     // API returns [{start: "2026-05-14"}, ...]
     bookedDates = data.map(b => b.start);
