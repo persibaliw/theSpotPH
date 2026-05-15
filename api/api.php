@@ -37,8 +37,8 @@ try {
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::MYSQL_ATTR_SSL_CA => $ssl_ca,
-        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+        PDO::Mysql\ATTR_SSL_CA => $ssl_ca,
+        PDO::Mysql\ATTR_SSL_VERIFY_SERVER_CERT => false,
         PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
     ];
     $pdo = new PDO($dsn, $user, $pass, $options);
