@@ -1,9 +1,23 @@
 {
+  "functions": {
+    "api/**/*.php": {
+      "runtime": "vercel-php@0.7.0"
+    },
+    "*.php": {
+      "runtime": "vercel-php@0.7.0"
+    }
+  },
   "redirects": [
     {
-      "source":"/",
-      "destination":"/homepage.html",
+      "source": "/",
+      "destination": "/homepage.html",
       "permanent": true
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api.php?action=$1"
     }
   ]
 }
