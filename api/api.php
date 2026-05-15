@@ -3,9 +3,8 @@ session_start();
 header('Content-Type: application/json');
 
 // --- DATABASE CONNECTION ---
-// --- DATABASE CONNECTION (AIVEN + VERCEL CONFIG) ---
 $host = getenv('DB_HOST');
-$port = getenv('DB_PORT'); // Aiven usually uses a unique port, not 3306
+$port = getenv('DB_PORT');
 $db   = getenv('DB_NAME');
 $user = getenv('DB_USER');
 $pass = getenv('DB_PASS');
@@ -19,9 +18,7 @@ try {
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        // SSL is MANDATORY for Aiven
         PDO::MYSQL_ATTR_SSL_CA => $ssl_ca,
-        // Optional: set to false if you have issues with server cert verification on Vercel
         PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false, 
     ];
 
@@ -29,9 +26,6 @@ try {
 } catch (PDOException $e) {
     die(json_encode(['success' => false, 'message' => 'Service temporarily unavailable']));
 }
-//     } catch (PDOException $e) {
-//     die(json_encode(['success' => false, 'message' => $e->getMessage()]));
-// }
 
 // --- ACTIONS ---
 
