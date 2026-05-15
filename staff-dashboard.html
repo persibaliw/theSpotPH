@@ -261,7 +261,7 @@
     <script>
         async function loadProfile() {
             try {
-                const res = await fetch('api.php?action=get_profile');
+                const res = await fetch('api/api.php?action=get_profile');
                 const data = await res.json();
 
                 if (data.success) {
