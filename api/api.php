@@ -11,7 +11,7 @@ ini_set('display_errors', 0);
 // $user=getenv('DB_USER');
 // $pass=getenv('DB_PASS');
 $host="thespotphdb-thespotph.h.aivencloud.com";
-$port=18667;
+$port=18663;
 $db="defaultdb";
 $user="avnadmin";
 $pass="AVNS_v56EA402DIGZeEvonj0";
