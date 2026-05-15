@@ -178,7 +178,7 @@
       loginBtn.disabled = true;
 
       try {
-        const res = await fetch('api.php?action=login', {
+        const res = await fetch('api/api.php?action=login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
