@@ -300,6 +300,10 @@
       background-color: #111827 !important;
       color: white !important;
     }
+
+    .select2-container--open {
+    z-index: 9999999 !important;
+  }
   </style>
 </head>
 
@@ -497,18 +501,21 @@
   }
 
   async function loadStaff() {
-    const staff = await apiFetch('get_staff');
-    if (!Array.isArray(staff)) return;
+  const staff = await apiFetch('get_staff'); 
+  if (!Array.isArray(staff)) return;
 
-    const select = document.getElementById('staffSelect');
-    select.innerHTML = ''; 
-    staff.forEach(s => {
-      const opt = document.createElement('option');
-      opt.value = s.id;
-      opt.textContent = s.name;
-      select.appendChild(opt);
-    });
-  }
+  const select = document.getElementById('staffSelect');
+  select.innerHTML = '';
+
+  staff.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    opt.textContent = s.name;
+    select.appendChild(opt);
+  });
+
+  $('.js-staff-multiple').trigger('change');
+}
 
   async function saveAssignment() {
     const selectedStaffIds = $('#staffSelect').val();
