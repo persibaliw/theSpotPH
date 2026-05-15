@@ -60,8 +60,12 @@ if ($action === 'login') {
 
     if ($userRecord && ($inputPassword === $userRecord['password'] || md5($inputPassword) === $userRecord['password'])) {
         $_SESSION['user_id'] = $userRecord['id'];
-        $_SESSION['role'] = strtolower($userRecord['role']);
+        $_SESSION['role'] = strtolower($userRecord['role']); // Keep this for consistency
         $_SESSION['full_name'] = $userRecord['full_name'];
+        
+        // --- ADD THIS LINE ---
+        // This saves the session data and releases the file lock immediately
+        session_write_close(); 
         
         ob_clean();
         echo json_encode(['success' => true, 'role' => $userRecord['role']]);
@@ -70,7 +74,6 @@ if ($action === 'login') {
         echo json_encode(['success' => false, 'message' => 'Invalid credentials']);
     }
     exit;
-}
 
 elseif ($action === 'get_profile') {
     $user_id = $_SESSION['user_id'] ?? null;
