@@ -756,8 +756,8 @@ body {
     margin-bottom: 14px;
 }
 
-.booking-container input,
-.booking-container textarea {
+.form-container input,
+.form-container textarea {
     width: 100%;
     padding: 13px 16px;
     border-radius: 8px;
@@ -770,34 +770,34 @@ body {
     transition: border-color 0.2s;
 }
 
-.booking-container input:focus,
-.booking-container textarea:focus {
+.form-container input:focus,
+.form-container textarea:focus {
     outline: none;
     border-color: var(--accent);
 }
 
-.booking-container input::placeholder,
-.booking-container textarea::placeholder,
-.booking-container input[type="date"]::-webkit-datetime-edit {
+.form-container input::placeholder,
+.form-container textarea::placeholder,
+.form-container input[type="date"]::-webkit-datetime-edit {
     color: rgba(255, 255, 255, 0.5);
 }
 
-.booking-container input[type="date"].has-value::-webkit-datetime-edit {
+.form-container input[type="date"].has-value::-webkit-datetime-edit {
     color: var(--white);
 }
 
-.booking-container input[type="date"]::-webkit-calendar-picker-indicator {
+.form-container input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 
-.booking-container textarea {
+.form-container textarea {
     height: 180px;
     resize: none;
     margin-bottom: 14px;
     display: block;
 }
 
-.booking-container button[type="submit"] {
+.form-container button[type="submit"] {
     width: 100%;
     padding: 14px;
     border-radius: 30px;
@@ -811,15 +811,14 @@ body {
     box-shadow: 0 5px 0 var(--accent-shadow);
     transition: all 0.2s ease;
 }
-
-.booking-container button[type="submit"]:hover {
+.form-container button[type="submit"]:hover {
     background: var(--accent-dark);
     color: var(--white);
     transform: translateY(2px);
     box-shadow: 0 3px 0 var(--accent-shadow);
 }
 
-.booking-container select {
+.form-container select {
     width: 100%;
     padding: 13px 40px 13px 16px;
     border-radius: 8px;
@@ -831,11 +830,11 @@ body {
     backdrop-filter: blur(5px);
 }
 
-.booking-container select.selected {
+.form-container select.selected {
     color: white;
 }
 
-.booking-container select:focus {
+.form-container select:focus {
     outline: none;
     border-color: var(--accent);
 }
