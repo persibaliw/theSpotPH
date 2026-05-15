@@ -185,8 +185,15 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success) {
         const trackingUrl = window.location.origin + '/track.php?id=' + data.token;
         
-        alert("Thank you! Your request has been sent.\n\nYou can track your status here: " + trackingUrl);
+        document.getElementById('bookingForm').style.display = 'none';
         
+        const successDiv = document.getElementById('successMessage');
+        successDiv.style.display = 'block';
+        
+        const linkEl = document.getElementById('trackLink');
+        linkEl.href = trackingUrl;
+        linkEl.innerText = trackingUrl;
+
         bookingForm.reset();
         renderCalendar();
       } else {
