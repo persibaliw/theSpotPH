@@ -266,7 +266,7 @@
 
     async function loadProfile() {
         try {
-            const data = await apiFetch('get_profile');
+            const data = await apiFetch('api.php?action=get_profile');
 
             if (data.success) {
                 document.getElementById('staffName').innerText = data.full_name;
