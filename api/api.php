@@ -1,15 +1,18 @@
 <?php
+// 1. Vercel Session Fix (Must be at the very top)
+ini_set('session.save_path', '/tmp');
+ini_set('session.cookie_samesite', 'None');
+ini_set('session.cookie_secure', 'True');
 session_start();
-header('Content-Type: application/json');
-error_reporting(0);
-ini_set('display_errors', 0);
 
-//--- DATABASE CONNECTION ---
-$host=getenv('DB_HOST');
-$port=getenv('DB_PORT');
-$db=getenv('DB_NAME');
-$user=getenv('DB_USER');
-$pass=getenv('DB_PASS');
+header('Content-Type: application/json');
+
+// --- DATABASE CONNECTION ---
+$host = getenv('DB_HOST');
+$port = getenv('DB_PORT');
+$db   = getenv('DB_NAME');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASS');
 $ssl_ca = __DIR__ . '/certs/ca.pem'; 
 
 // --- GET ACTION ---
@@ -25,15 +28,65 @@ try {
         PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
     ];
     $pdo = new PDO($dsn, $user, $pass, $options);
-    } catch (PDOException $e) {
-        die(json_encode(['success' => false, 'message' => 'Connection Error']));
-    }
-    
+} catch (PDOException $e) {
+    // Show real error for debugging, then change back to 'Connection Error' later
+    die(json_encode(['success' => false, 'message' => $e->getMessage()]));
+}
 
 // --- ACTIONS ---
 
+// Login Fix: Added full_name to the SELECT
+if ($action === 'login') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $email = $data['email'] ?? '';
+    $inputPassword = $data['password'] ?? '';
+
+    $stmt = $pdo->prepare("SELECT id, role, password, full_name FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user && ($inputPassword === $user['password'] || md5($inputPassword) === $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['role'] = $user['role'];
+        $_SESSION['full_name'] = $user['full_name']; // Store the name for the dashboard
+        
+        echo json_encode([
+            'success' => true, 
+            'role' => $user['role']
+        ]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Invalid email or password']);
+    }
+    exit;
+}
+
+// Get Profile Fix
+elseif ($action === 'get_profile') {
+    $user_id = $_SESSION['user_id'] ?? null;
+
+    if (!$user_id) {
+        echo json_encode(['success' => false, 'message' => 'Not logged in']);
+        exit;
+    }
+
+    // Always fetch fresh from DB in case they updated their name
+    $stmt = $pdo->prepare("SELECT full_name FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    $userResult = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($userResult) {
+        echo json_encode([
+            'success' => true, 
+            'full_name' => $userResult['full_name']
+        ]);
+    } else {
+        echo json_encode(['success' => false]);
+    }
+    exit;
+}
+
 // Client: Submit Booking
-if ($action === 'book') {
+elseif ($action === 'book') {
     $data = json_decode(file_get_contents('php://input'), true);
     $token = bin2hex(random_bytes(16)); 
     
@@ -52,33 +105,6 @@ if ($action === 'book') {
     echo json_encode(['success' => $success, 'token' => $token]);
 }
 
-elseif ($action === 'login') {
-    $data = json_decode(file_get_contents('php://input'), true);
-    $email = $data['email'] ?? '';
-    $password = $data['password'] ?? '';
-
-    // Search for the user
-    $stmt = $pdo->prepare("SELECT id, role, password FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // FIX: Check plain text (staff) AND MD5 (admin) from your SQL data
-    if ($user && ($password === $user['password'] || md5($password) === $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['role'] = $user['role'];
-        
-        echo json_encode([
-            'success' => true, 
-            'role' => $user['role']
-        ]);
-    } else {
-        echo json_encode([
-            'success' => false, 
-            'message' => 'Invalid email or password'
-        ]);
-    }
-}
-
 // Admin: Fetch All Bookings
 elseif ($action === 'get_bookings') {
     if (($_SESSION['role'] ?? '') !== 'admin') {
@@ -94,13 +120,12 @@ elseif ($action === 'update_status') {
         echo json_encode(['error' => 'Unauthorized']); exit;
     }
     $data = json_decode(file_get_contents('php://input'), true);
-    
     $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ?");
     $success = $stmt->execute([$data['status'], $data['id']]);
     echo json_encode(['success' => $success]);
 }
 
-// FIX 1: Multi-Role Calendar View (Handles Staff IDs string)
+// Calendar View
 elseif ($action === 'get_calendar') {
     $type = $_GET['user_type'] ?? 'client';
     $user_id = $_SESSION['user_id'] ?? null;
@@ -110,7 +135,6 @@ elseif ($action === 'get_calendar') {
         echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     } 
     elseif ($type === 'staff' && $user_id) {
-        // USE FIND_IN_SET to check if this staff ID is inside the comma-separated string
         $stmt = $pdo->prepare("SELECT id, name as title, event_date as start, package, message 
                                FROM bookings 
                                WHERE FIND_IN_SET(?, assigned_user_id) AND status = 'accepted'");
@@ -118,7 +142,6 @@ elseif ($action === 'get_calendar') {
         echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     } 
     else {
-        // Client view
         $stmt = $pdo->query("SELECT event_date as start, 'Full' as title FROM bookings WHERE status = 'accepted'");
         echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
@@ -133,22 +156,14 @@ elseif ($action === 'get_staff') {
     echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 }
 
-// FIX 2: Assign Multiple Staff
+// Admin: Assign Multiple Staff
 elseif ($action === 'assign_staff') {
     if (($_SESSION['role'] ?? '') !== 'admin') {
         echo json_encode(['error' => 'Unauthorized']); exit;
     }
     $data = json_decode(file_get_contents('php://input'), true);
-    
-    // We update the assigned_user_id column with the comma-separated string (e.g. "1,4")
-    // Ensure your database column 'assigned_user_id' is set to TEXT or VARCHAR(255)
     $stmt = $pdo->prepare("UPDATE bookings SET assigned_user_id = ?, event_date = ? WHERE id = ?");
-    $success = $stmt->execute([
-        $data['staff_ids'], // From JS: selectedStaffIds.join(',')
-        $data['date'], 
-        $data['booking_id']
-    ]);
-    
+    $success = $stmt->execute([$data['staff_ids'], $data['date'], $data['booking_id']]);
     echo json_encode(['success' => $success]);
 }
 
@@ -161,28 +176,6 @@ elseif ($action === 'update_account') {
     $stmt = $pdo->prepare("UPDATE users SET full_name = ?, password = ? WHERE id = ?");
     $success = $stmt->execute([$data['name'], $data['password'], $user_id]);
     echo json_encode(['success' => $success]);
-}
-
-elseif ($action === 'get_profile') {
-    $user_id = $_SESSION['user_id'] ?? null;
-
-    if (!$user_id) {
-        echo json_encode(['success' => false, 'message' => 'Not logged in']);
-        exit;
-    }
-
-    $stmt = $pdo->prepare("SELECT full_name FROM users WHERE id = ?");
-    $stmt->execute([$user_id]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($user) {
-        echo json_encode([
-            'success' => true, 
-            'full_name' => $user['full_name']
-        ]);
-    } else {
-        echo json_encode(['success' => false]);
-    }
 }
 
 // Logout
