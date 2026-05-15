@@ -120,10 +120,17 @@ elseif ($action === 'get_bookings') {
 }
 
 elseif ($action === 'get_staff') {
-    if (($_SESSION['role'] ?? '') !== 'admin') { exit; }
-    $stmt = $pdo->query("SELECT id, full_name as name FROM users WHERE role = 'staff'");
+    if (($_SESSION['role'] ?? '') !== 'admin') { 
+        ob_clean();
+        echo json_encode(['error' => 'Unauthorized', 'debug_role' => ($_SESSION['role'] ?? 'none')]);
+        exit; 
+    }
+
+    $stmt = $pdo->query("SELECT id, full_name as name FROM users WHERE LOWER(role) = 'staff'");
+    $results = $stmt->fetchAll();
+
     ob_clean();
-    echo json_encode($stmt->fetchAll());
+    echo json_encode($results);
     exit;
 }
 
