@@ -1,30 +1,32 @@
 <?php
 session_start();
 header('Content-Type: application/json');
+error_reporting(0);
+ini_set('display_errors', 0);
 
 // --- DATABASE CONNECTION ---
-$host = getenv('DB_HOST');
-$port = getenv('DB_PORT');
-$db   = getenv('DB_NAME');
-$user = getenv('DB_USER');
-$pass = getenv('DB_PASS');
-
-// Path to the Aiven CA certificate you uploaded to your repo
+$host=getenv('DB_HOST');
+$port=getenv('DB_PORT');
+$db=getenv('DB_NAME');
+$user=getenv('DB_USER');
+$pass=getenv('DB_PASS');
 $ssl_ca = __DIR__ . '/certs/ca.pem'; 
 
+// --- GET ACTION ---
+$action = $_GET['action'] ?? ''; 
+
 try {
-    $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8";
-    
+    $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::MYSQL_ATTR_SSL_CA => $ssl_ca,
         PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false, 
     ];
-
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {
-    die(json_encode(['success' => false, 'message' => 'Service temporarily unavailable']));
+    // If this fails, visit /api/login directly in your browser to see why
+    die(json_encode(['success' => false, 'message' => 'Connection Error']));
 }
 
 // --- ACTIONS ---
