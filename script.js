@@ -207,6 +207,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+dateInput = document.getElementById('b_date');
+
 dateInput.addEventListener('input', function() {
     if (this.value) {
         this.style.color = "white";
@@ -220,6 +222,8 @@ const packageSelect = document.getElementById('b_package');
 packageSelect.addEventListener('change', function() {
     this.style.color = "white";
 });
+
+dateInput = document.getElementById('b_date');
 
 dateInput.addEventListener('change', function() {
     if (this.value) {
