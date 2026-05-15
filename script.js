@@ -215,6 +215,16 @@ packageSelect.addEventListener('change', function() {
     this.style.color = "white";
 });
 
+const dateInput = document.getElementById('b_date');
+
+dateInput.addEventListener('change', function() {
+    if (this.value) {
+        this.classList.add('has-value');
+    } else {
+        this.classList.remove('has-value');
+    }
+});
+
 // Calendar Navigation
 const prevBtn = document.getElementById("calPrev");
 const nextBtn = document.getElementById("calNext");
