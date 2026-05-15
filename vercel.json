@@ -19,6 +19,14 @@
     {
       "source": "/track.php",
       "destination": "/api/track.php"
+    },
+    {
+      "source": "/api/login",
+      "destination": "/api/api.php?action=login"
+    },
+    {
+      "source": "/api/get_profile",
+      "destination": "/api/api.php?action=get_profile"
     }
   ]
 }
