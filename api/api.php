@@ -115,12 +115,12 @@ elseif ($action === 'book') {
         try {
             // --- Server Settings ---
             $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = 'johnpercivalaguilar01@gmail.com';
-            $mail->Password   = 'ifcn mdsr lxwu ycmg';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 587;
+            $mail->Host='smtp.gmail.com';
+            $mail->SMTPAuth=true;
+            $mail->Username='johnpercivalaguilar01@gmail.com';
+            $mail->Password='ifcn mdsr lxwu ycmg';
+            $mail->SMTPSecure=PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port=587;
 
             // --- Recipients ---
             $mail->setFrom('johnpercivalaguilar01@gmail.com', 'TheSpotPH');
