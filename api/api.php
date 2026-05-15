@@ -45,7 +45,7 @@ if ($action === 'book') {
     ]);
 
     if ($success) {
-        $trackLink = "http://localhost/thespotph/track.php?id=" . $token;
+        $trackLink = "https://thespotph.vercel.app/track.php?id=" . $token;
         $subject = "Your Booking Request - TheSpotPH";
         $message = "Hi " . $data['name'] . ",\n\nWe received your request! Track status: " . $trackLink;
         @mail($data['email'], $subject, $message, "From: no-reply@thespotph.com");
