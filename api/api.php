@@ -1,6 +1,6 @@
 <?php
+// 1. SESSION & HEADER CONFIG
 ini_set('session.save_path', '/tmp');
-
 session_set_cookie_params([
     'lifetime' => 86400,
     'path' => '/',
@@ -13,15 +13,19 @@ session_set_cookie_params([
 ob_start(); 
 error_reporting(0);
 ini_set('display_errors', 0);
-
-ini_set('session.save_path', '/tmp');
-ini_set('session.cookie_samesite', 'None');
-ini_set('session.cookie_secure', 'True');
 session_start();
 
 header('Content-Type: application/json');
 
-// --- DATABASE CONNECTION ---
+// 2. IMPORT PHPMailer (Must be at the top level, before any logic)
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'PHPMailer/Exception.php';
+require 'PHPMailer/PHPMailer.php';
+require 'PHPMailer/SMTP.php';
+
+// 3. DATABASE CONNECTION
 $host=getenv('DB_HOST');
 $port=getenv('DB_PORT');
 $db=getenv('DB_NAME');
@@ -29,7 +33,6 @@ $user=getenv('DB_USER');
 $pass=getenv('DB_PASS');
 $ssl_ca = __DIR__ . '/certs/ca.pem'; 
 
-// --- GET ACTION ---
 $action = $_GET['action'] ?? ''; 
 
 try {
@@ -47,8 +50,7 @@ try {
     die(json_encode(['success' => false, 'message' => 'Database connection failed']));
 }
 
-// --- ACTIONS ---
-
+// 4. ACTIONS LOGIC
 if ($action === 'login') {
     $data = json_decode(file_get_contents('php://input'), true);
     $email = $data['email'] ?? '';
@@ -64,7 +66,6 @@ if ($action === 'login') {
         $_SESSION['full_name'] = $userRecord['full_name'];
         
         session_write_close(); 
-        
         ob_clean();
         echo json_encode(['success' => true, 'role' => $userRecord['role']]);
     } else {
@@ -94,14 +95,6 @@ elseif ($action === 'get_profile') {
     exit;
 }
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-// Include PHPMailer files (Adjust paths if your folder name is different)
-require 'PHPMailer/Exception.php';
-require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
-
 elseif ($action === 'book') {
     $data = json_decode(file_get_contents('php://input'), true);
     $token = bin2hex(random_bytes(16));
@@ -111,9 +104,7 @@ elseif ($action === 'book') {
 
     if ($success) {
         $mail = new PHPMailer(true);
-
         try {
-            // --- Server Settings ---
             $mail->isSMTP();
             $mail->Host='smtp.gmail.com';
             $mail->SMTPAuth=true;
@@ -122,11 +113,9 @@ elseif ($action === 'book') {
             $mail->SMTPSecure=PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port=587;
 
-            // --- Recipients ---
             $mail->setFrom('johnpercivalaguilar01@gmail.com', 'TheSpotPH');
             $mail->addAddress($data['email'], $data['name']);
 
-            // --- Content ---
             $trackingUrl = "https://thespotph.vercel.app/track.php?id=" . $token;
             $mail->isHTML(true);
             $mail->Subject = 'Your Booking Request Status - TheSpotPH';
@@ -139,11 +128,8 @@ elseif ($action === 'book') {
                     <p style='margin-top:20px; font-size:12px; color:#888;'>Reference ID: $token</p>
                 </div>
             ";
-
             $mail->send();
-        } catch (Exception $e) {
-            // Silently fail email so the booking still goes through
-        }
+        } catch (Exception $e) { }
     }
 
     ob_clean();
@@ -185,10 +171,8 @@ elseif ($action === 'get_staff') {
         echo json_encode(['error' => 'Unauthorized', 'debug_role' => ($_SESSION['role'] ?? 'none')]);
         exit; 
     }
-
     $stmt = $pdo->query("SELECT id, full_name as name FROM users WHERE LOWER(role) = 'staff'");
     $results = $stmt->fetchAll();
-
     ob_clean();
     echo json_encode($results);
     exit;
