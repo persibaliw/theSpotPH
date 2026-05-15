@@ -279,20 +279,16 @@
               center: 'title',
               right: 'next'
             },
-            // This pulls live data from your api.php
             events: 'api.php?action=get_calendar&user_type=client',
 
-            eventBackgroundColor: '#e05252', // Red for booked
+            eventBackgroundColor: '#e05252',
             eventTextColor: '#ffffff',
 
-            // When a user clicks a date, auto-fill the booking form
             dateClick: function (info) {
               const dateInput = document.getElementById('b_date');
               if (dateInput) {
                 dateInput.value = info.dateStr;
-                // Trigger the 'has-value' logic from your script
                 dateInput.classList.add('has-value');
-                // Smooth scroll to the form
                 document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
               }
             }
@@ -333,8 +329,6 @@
             <p>0956 203 4058</p>
           </div>
           <div class="card">
-            <a href="https://www.google.com/maps/search/?api=1&query=Imus+Cavite" target="_blank"
-              rel="noopener noreferrer">
               <div class="icon">
                 <img src="assets/pinpoint.png" alt="location-point" />
               </div>
