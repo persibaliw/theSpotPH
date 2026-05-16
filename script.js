@@ -107,7 +107,7 @@ async function renderCalendar() {
         const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
         const isBooked = bookedDates.includes(dateString);
         
-        // Pure string comparison: If the cell date is lexicographically less than today's date string, it's in the past
+        // Pure string comparison: If the cell date is less than today's date string, it's in the past
         const isPast = dateString < todayString;
 
         // Add 'disabled' class if it's a past date
@@ -147,9 +147,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const bookingForm = document.getElementById('bookingForm');
     const pkgSelect = document.getElementById("b_package");
     const dateInput = document.getElementById('b_date');
+    const phoneInput = document.getElementById('b_phone'); // Targeted Phone Field
     const pkgButtons = document.querySelectorAll(".book-btn");
     const prevBtn = document.getElementById("calPrev");
     const nextBtn = document.getElementById("calNext");
+
+    // Max length constraint helper for +63 numbers
+    if (phoneInput) {
+        phoneInput.setAttribute('maxlength', '13');
+    }
 
     // 2. Package Selection (Service Buttons)
     pkgButtons.forEach(btn => {
@@ -165,6 +171,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Date Input Styling Fixes (Consolidated)
     if (dateInput) {
+        // Set HTML min constraint to today
+        const now = new Date();
+        const todayString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        dateInput.setAttribute('min', todayString);
+
         const updateDateStyle = () => {
             if (dateInput.value) {
                 dateInput.style.color = "white";
@@ -178,6 +189,19 @@ document.addEventListener('DOMContentLoaded', () => {
         dateInput.addEventListener('change', updateDateStyle);
     }
 
+    // NEW: Real-time Phone Filter (Enforces numbers and a single leading plus sign)
+    if (phoneInput) {
+        phoneInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^0-9+]/g, '');
+            
+            // Enforce that '+' can only occupy index 0
+            if (value.indexOf('+') > 0) {
+                value = value.substring(0, value.indexOf('+')) + value.substring(value.indexOf('+') + 1);
+            }
+            e.target.value = value;
+        });
+    }
+
     // 4. Select Dropdown Color Change
     if (pkgSelect) {
         pkgSelect.addEventListener("change", () => {
@@ -189,6 +213,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (bookingForm) {
         bookingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // NEW: Philippine Contact Number Checker Logic
+            const rawPhone = phoneInput ? phoneInput.value.trim() : "";
+            if (rawPhone !== "") {
+                const phPhoneRegex = /^(?:\+639|639|09)\d{9}$/;
+                
+                if (!phPhoneRegex.test(rawPhone)) {
+                    alert("Please enter a valid Philippine mobile number.\n\nFormats accepted:\n- 09XXXXXXXXX (e.g. 09123456789)\n- +639XXXXXXXXX (e.g. +639123456789)");
+                    if (phoneInput) phoneInput.focus();
+                    return; // Terminates submission process immediately
+                }
+            }
+
             const btn = document.getElementById('submitBtn');
             const originalText = btn.innerText;
 
@@ -198,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const payload = {
                 name: document.getElementById('b_name').value,
                 email: document.getElementById('b_email').value,
-                phone: document.getElementById('b_phone').value,
+                phone: rawPhone,
                 date: document.getElementById('b_date').value,
                 package: pkgSelect ? pkgSelect.value : "",
                 message: document.getElementById('b_message').value
