@@ -197,6 +197,30 @@ elseif ($action === 'update_status') {
     exit;
 }
 
+elseif ($action === 'delete_booking') {
+    if (($_SESSION['role'] ?? '') !== 'admin') { 
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        exit; 
+    }
+    
+    $data = json_decode(file_get_contents('php://input'), true);
+    $booking_id = $data['id'] ?? null;
+
+    if (!$booking_id) {
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'Missing booking ID']);
+        exit;
+    }
+
+    $stmt = $pdo->prepare("DELETE FROM bookings WHERE id = ?");
+    $success = $stmt->execute([$booking_id]);
+
+    ob_clean();
+    echo json_encode(['success' => $success]);
+    exit;
+}
+
 elseif ($action === 'logout') {
     session_destroy();
     ob_clean();
