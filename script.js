@@ -99,16 +99,30 @@ async function renderCalendar() {
     let html = "";
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+    // Get today's date normalized to midnight for an accurate local comparison
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     for (let i = 1; i <= daysInMonth; i++) {
+        const currentCellDate = new Date(year, month, i);
         const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
         const isBooked = bookedDates.includes(dateString);
-        html += `<div class="cal-cell ${isBooked ? 'booked' : ''}" data-date="${dateString}"><div class="cal-date">${i}</div></div>`;
+        
+        // Determine if this calendar day is before today
+        const isPast = currentCellDate < today;
+
+        // Add 'disabled' class if it's a past date
+        html += `<div class="cal-cell ${isBooked ? 'booked' : ''} ${isPast ? 'disabled' : ''}" data-date="${dateString}">
+                    <div class="cal-date">${i}</div>
+                 </div>`;
     }
 
     const grid = document.getElementById("calGrid");
     if (grid) {
         grid.innerHTML = html;
-        grid.querySelectorAll(".cal-cell:not(.booked)").forEach(cell => {
+        
+        // ONLY attach click listeners to cells that are NOT booked AND NOT past/disabled
+        grid.querySelectorAll(".cal-cell:not(.booked):not(.disabled)").forEach(cell => {
             cell.onclick = () => {
                 const dateInput = document.getElementById('b_date');
                 if (dateInput) {
