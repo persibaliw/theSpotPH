@@ -458,7 +458,16 @@
           <td>${b.event_date}</td>
           <td>${b.package}</td>
           <td><span class="status ${b.status}">${b.status}</span></td>
-          <td><button class="action-btn" onclick="openModal(${b.id})">Review</button></td>
+          <td>
+            <button class="action-btn" onclick="openModal(${b.id})">
+                Review
+            </button>
+          </td>
+          <td>
+            <button class="delete-btn" onclick="deleteBooking(${booking.id})" style="background: #e05252; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-left: 5px;">
+                Delete
+            </button>
+          </td>
         </tr>
       `;
     });
