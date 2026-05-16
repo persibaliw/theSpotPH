@@ -397,6 +397,13 @@ body {
     margin-bottom: 50px;
 }
 
+.packages-section .divider-bottom {
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+    margin-top: 50px;
+}
+
 .packages-intro {
     text-align: center;
     color: var(--white);
