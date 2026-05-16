@@ -269,33 +269,48 @@
       <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 
       <div id='availabilityCalendar'></div>
-
-      <script>
+  
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
-          var calendarEl = document.getElementById('availabilityCalendar');
-          var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            headerToolbar: {
-              left: 'prev',
-              center: 'title',
-              right: 'next'
-            },
-            events: 'api/api.php?action=get_calendar&user_type=client',
-
-            eventBackgroundColor: '#e05252',
-            eventTextColor: '#ffffff',
-
-            dateClick: function (info) {
-              const dateInput = document.getElementById('b_date');
-              if (dateInput) {
-                dateInput.value = info.dateStr;
-                dateInput.classList.add('has-value');
-                document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
-              }
+        var calendarEl = document.getElementById('availabilityCalendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          headerToolbar: {
+            left: 'prev',
+            center: 'title',
+            right: 'next'
+          },
+          events: 'api/api.php?action=get_calendar&user_type=client',
+    
+          eventBackgroundColor: '#e05252',
+          eventTextColor: '#ffffff',
+    
+          dateClick: function (info) {
+            // 1. Get today's local date formatted exactly as "YYYY-MM-DD"
+            const now = new Date();
+            const todayString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    
+            // 2. If the clicked date is before today, block it completely
+            if (info.dateStr < todayString) {
+              alert("You cannot select a past date for booking.");
+              return; // Stop the code right here so it doesn't fill the input form
             }
-          });
-          calendar.render();
+    
+            // 3. If it's valid, update the input field and scroll down smoothly
+            const dateInput = document.getElementById('b_date');
+            if (dateInput) {
+              dateInput.value = info.dateStr;
+              dateInput.classList.add('has-value');
+              
+              // Force standard style update listener triggers from script.js
+              dateInput.dispatchEvent(new Event('change')); 
+              
+              document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+            }
+          }
         });
+        calendar.render();
+      });
       </script>
     </section>
 
