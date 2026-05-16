@@ -966,6 +966,12 @@ body {
     box-shadow: none;
 }
 
+.fc-day-past {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    opacity: 0.4;
+    cursor: not-allowed !important;
+}
+
 /* ===== FOOTER ===== */
 .footer {
     background: var(--base);
