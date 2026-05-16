@@ -96,6 +96,27 @@ elseif ($action === 'get_profile') {
 
 elseif ($action === 'book') {
     $data = json_decode(file_get_contents('php://input'), true);
+
+    // 1. Validate Date Not in Past
+    $bookingDate = strtotime($data['date']);
+    $today = strtotime(date('Y-m-d'));
+    if ($bookingDate < $today) {
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'You cannot request a booking date in the past.']);
+        exit;
+    }
+
+    // 2. Validate PH Phone Pattern if provided
+    $phone = trim($data['phone'] ?? '');
+    if (!empty($phone)) {
+        // PHP pattern equivalent to JavaScript validation checker
+        if (!preg_match('/^(?:\+639|639|09)\d{9}$/', $phone)) {
+            ob_clean();
+            echo json_encode(['success' => false, 'message' => 'Invalid Philippine phone number structure.']);
+            exit;
+        }
+    }
+    
     $token = bin2hex(random_bytes(16));
     
     $stmt = $pdo->prepare("INSERT INTO bookings (token, name, email, phone, event_date, package, message) VALUES (?, ?, ?, ?, ?, ?, ?)");
