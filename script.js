@@ -99,17 +99,16 @@ async function renderCalendar() {
     let html = "";
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Get today's date normalized to midnight for an accurate local comparison
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Get today's local date formatted exactly as "YYYY-MM-DD"
+    const now = new Date();
+    const todayString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     for (let i = 1; i <= daysInMonth; i++) {
-        const currentCellDate = new Date(year, month, i);
         const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
         const isBooked = bookedDates.includes(dateString);
         
-        // Determine if this calendar day is before today
-        const isPast = currentCellDate < today;
+        // Pure string comparison: If the cell date is lexicographically less than today's date string, it's in the past
+        const isPast = dateString < todayString;
 
         // Add 'disabled' class if it's a past date
         html += `<div class="cal-cell ${isBooked ? 'booked' : ''} ${isPast ? 'disabled' : ''}" data-date="${dateString}">
@@ -121,16 +120,21 @@ async function renderCalendar() {
     if (grid) {
         grid.innerHTML = html;
         
-        // ONLY attach click listeners to cells that are NOT booked AND NOT past/disabled
-        grid.querySelectorAll(".cal-cell:not(.booked):not(.disabled)").forEach(cell => {
-            cell.onclick = () => {
-                const dateInput = document.getElementById('b_date');
-                if (dateInput) {
-                    dateInput.value = cell.dataset.date;
-                    dateInput.dispatchEvent(new Event('change')); // Trigger visual update
-                    document.querySelector(".form-container").scrollIntoView({ behavior: "smooth" });
-                }
-            };
+        // Lock it down: ONLY look for cells that explicitly don't have .booked or .disabled classes
+        grid.querySelectorAll(".cal-cell").forEach(cell => {
+            if (cell.classList.contains('booked') || cell.classList.contains('disabled')) {
+                cell.onclick = null;
+                cell.style.pointerEvents = "none";
+            } else {
+                cell.onclick = () => {
+                    const dateInput = document.getElementById('b_date');
+                    if (dateInput) {
+                        dateInput.value = cell.dataset.date;
+                        dateInput.dispatchEvent(new Event('change')); 
+                        document.querySelector(".form-container").scrollIntoView({ behavior: "smooth" });
+                    }
+                };
+            }
         });
     }
 }
