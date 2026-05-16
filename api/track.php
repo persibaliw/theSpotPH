@@ -6,7 +6,6 @@ $db   = getenv('DB_NAME');
 $user = getenv('DB_USER');
 $pass = getenv('DB_PASS');
 
-// Since track.php is in the root and certs are in /api/certs/
 $ssl_ca = __DIR__ . '/certs/ca.pem';
 
 try {
@@ -16,7 +15,6 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         @PDO::MYSQL_ATTR_SSL_CA => $ssl_ca,
         @PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
     ];
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {
