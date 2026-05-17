@@ -129,7 +129,7 @@ elseif ($action === 'book') {
             $mail->Host='smtp.gmail.com';
             $mail->SMTPAuth=true;
             $mail->Username='spotph.13@gmail.com';
-            $mail->Password='amvy gzb xvoo fxcy';
+            $mail->Password='qigt ezeu lqvl enhm';
             $mail->SMTPSecure=PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port=587;
 
