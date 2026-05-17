@@ -136,7 +136,7 @@ elseif ($action === 'book') {
             $mail->setFrom('spotph.13@gmail.com', 'TheSpotPH');
             $mail->addAddress($data['email'], $data['name']);
 
-            $trackingUrl = "https://thespotph.vercel.app/track.php?id=" . $token;
+            $trackingUrl = "https://www.thespotph.store/track.php?id=" . $token;
             $mail->isHTML(true);
             $mail->Subject = 'Your Booking Request Status - TheSpotPH';
             $mail->Body    = "
