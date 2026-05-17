@@ -128,12 +128,12 @@ elseif ($action === 'book') {
             $mail->isSMTP();
             $mail->Host='smtp.gmail.com';
             $mail->SMTPAuth=true;
-            $mail->Username='johnpercivalaguilar01@gmail.com';
-            $mail->Password='ifcn mdsr lxwu ycmg';
+            $mail->Username='spotph.13@gmail.com';
+            $mail->Password='amvy gzb xvoo fxcy';
             $mail->SMTPSecure=PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port=587;
 
-            $mail->setFrom('johnpercivalaguilar01@gmail.com', 'TheSpotPH');
+            $mail->setFrom('spotph.13@gmail.com', 'TheSpotPH');
             $mail->addAddress($data['email'], $data['name']);
 
             $trackingUrl = "https://thespotph.vercel.app/track.php?id=" . $token;
