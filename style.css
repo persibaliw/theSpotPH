@@ -576,7 +576,7 @@ body {
     justify-content: center;
     align-items: flex-start;
     gap: 30px;
-    flex-wrap: wrap; /* Automatically drops to columns on mobile screens */
+    flex-wrap: wrap;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -607,12 +607,12 @@ body {
 .avatar-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures images crop perfectly into the circle frame */
+    object-fit: cover;
     transition: transform 0.5s ease;
 }
 
 .team-card:hover .avatar-wrapper img {
-    transform: scale(1.08); /* Tiny dynamic zoom when hovering over the card */
+    transform: scale(1.08);
 }
 
 .team-card h3 {
@@ -627,7 +627,7 @@ body {
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--accent, #e05252); /* Matches your calendar highlight colors */
+    color: var(--accent, #e05252);
     margin-bottom: 15px;
     font-weight: 500;
 }
@@ -715,245 +715,7 @@ body {
     font-style: italic;
 }
 
-/* ===== BOOKING ===== */
-.booking-section {
-    background-image:
-        linear-gradient(rgba(24, 35, 57, 0.65), rgba(24, 35, 57, 0.65)),
-        url(assets/bookin-background.jpg);
-    background-position: center;
-    background-size: cover;
-    background-attachment: fixed;
-    padding: clamp(50px, 7vw, 90px) clamp(16px, 5vw, 60px);
-    display: flex;
-    justify-content: center;
-}
-
-.booking-container {
-    max-width: 860px;
-    width: 100%;
-    text-align: center;
-    color: var(--white);
-}
-
-.booking-container h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.8rem, 4vw, 2.6rem);
-    font-weight: 400;
-    color: var(--accent);
-    margin-bottom: 12px;
-}
-
-.subtitle {
-    font-size: 1rem;
-    opacity: 0.85;
-    margin-bottom: 40px;
-}
-
-.contact-cards {
-    display: flex;
-    gap: 16px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 40px;
-}
-
-.card {
-    background: rgba(14, 14, 14, 0.2);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    padding: 22px 24px;
-    min-width: 180px;
-    flex: 1;
-    max-width: 220px;
-    transition: all 0.3s ease;
-}
-
-.card:hover {
-    border: 1px solid var(--white);
-    transform: scale(1.04);
-    will-change: transform;
-}
-
-.card .icon {
-    font-size: 1.6rem;
-}
-
-.card img {
-    width: 50px;
-    height: auto;
-}
-
-.card h3 {
-    font-size: 0.85rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-    color: var(--accent);
-}
-
-.card p {
-    font-size: 0.9rem;
-    opacity: 0.85;
-}
-
-.form-label {
-    color: var(--accent);
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-}
-
-.form-container {
-    background: rgba(14, 14, 14, 0.2);
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 14px;
-    padding: clamp(24px, 4vw, 40px);
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.form-container input,
-.form-container textarea,
-.form-container select {
-    width: 100%;
-    padding: 13px 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #ffffff;
-    background: rgba(27, 27, 27, 0.7);
-    font-family: 'Outfit', sans-serif;
-    font-size: 16px; /* 16px prevents iOS from auto-zooming on focus */
-    backdrop-filter: blur(5px);
-    display: block;
-    box-sizing: border-box;
-}
-
-.form-container input[type="date"] {
-    appearance: none;
-    -webkit-appearance: none;
-    min-height: 48px;
-}
-
-.form-container input[type="date"]::-webkit-date-and-time-value {
-    text-align: left;
-    height: 48px;
-    line-height: 48px;
-    color: white;
-}
-
-.form-container input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    cursor: pointer;
-}
-
-.form-row {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 14px;
-}
-
-.form-container input,
-.form-container textarea {
-    width: 100%;
-    padding: 13px 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: var(--white);
-    background: rgba(27, 27, 27, 0.7);
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.95rem;
-    backdrop-filter: blur(5px);
-    transition: border-color 0.2s;
-}
-
-.form-container input:focus,
-.form-container textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-.form-container input::placeholder,
-.form-container textarea::placeholder,
-.form-container input[type="date"]::-webkit-datetime-edit {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.form-container input[type="date"].has-value::-webkit-datetime-edit {
-    color: var(--white);
-}
-
-.form-container input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-}
-
-.form-container textarea {
-    height: 180px;
-    resize: none;
-    margin-bottom: 14px;
-    display: block;
-}
-
-.form-container button[type="submit"] {
-    width: 100%;
-    padding: 14px;
-    border-radius: 30px;
-    border: none;
-    background: var(--accent);
-    color: var(--base);
-    font-family: 'Outfit', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 5px 0 var(--accent-shadow);
-    transition: all 0.2s ease;
-}
-.form-container button[type="submit"]:hover {
-    background: var(--accent-dark);
-    color: var(--white);
-    transform: translateY(2px);
-    box-shadow: 0 3px 0 var(--accent-shadow);
-}
-
-.form-container select {
-    width: 100%;
-    padding: 13px 40px 13px 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: rgba(255, 255, 255, 0.5);
-    background: rgba(27, 27, 27, 0.7);
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.95rem;
-    backdrop-filter: blur(5px);
-}
-
-.form-container select.selected {
-    color: white;
-}
-
-.form-container select:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-.form-container input[type="date"]:not(.has-value):before {
-    content: "Event Date";
-    color: rgba(255, 255, 255, 0.5);
-    margin-right: 0.5em;
-    font-family: 'Outfit', sans-serif;
-}
-
-.form-container input[type="date"].has-value:before {
-    content: "";
-    display: none;
-}
-
-.form-container input[type="date"]::-webkit-date-and-time-value {
-    text-align: left;
-    color: white;
-    min-height: 20px;
-}
-
+/* ===== CALENDAR ===== */
 .calendar-home {
     padding: 80px 20px;
     background: var(--base);
@@ -987,7 +749,6 @@ body {
     letter-spacing: 1px;
 }
 
-/* Day Numbers */
 .fc-daygrid-day-number {
     color: var(--white) !important;
     text-decoration: none !important;
@@ -995,14 +756,12 @@ body {
     font-weight: 300;
 }
 
-/* Grid Borders */
 .fc-theme-standard td,
 .fc-theme-standard th,
 .fc-theme-standard .fc-scrollgrid {
     border: 1px solid var(--border) !important;
 }
 
-/* Column Headers (Mon, Tue, etc.) */
 .fc-col-header-cell-cushion {
     color: var(--accent) !important;
     text-transform: uppercase;
@@ -1011,10 +770,8 @@ body {
     padding: 10px 0 !important;
 }
 
-/* "Booked" Event Styling */
 .fc-event {
     background-color: #e05252 !important;
-    /* Red for booked */
     border: none !important;
     border-radius: 4px !important;
     padding: 2px 8px !important;
@@ -1024,13 +781,11 @@ body {
     cursor: not-allowed;
 }
 
-/* Today's Date Highlight */
 .fc-day-today {
     background: rgba(207, 199, 176, 0.2) !important;
     border: 2px solid var(--accent) !important;
 }
 
-/* Buttons (Prev/Next) */
 .fc-button-primary {
     background-color: transparent !important;
     border: 1px solid var(--border) !important;
@@ -1047,7 +802,6 @@ body {
     opacity: 0.3;
 }
 
-/* Hover effect on available days */
 .fc-daygrid-day:hover {
     background: rgba(255, 255, 255, 0.02);
     cursor: pointer;
@@ -1069,11 +823,237 @@ body {
     cursor: not-allowed !important;
 }
 
-/* --- FIXED MODAL CONTAINER STYLING --- */
 
-/* The dark background overlay screen */
+/* =========================================================
+   ===== BOOKING SECTION & FORM =====
+   ========================================================= */
+.booking-section {
+    background-image:
+        linear-gradient(rgba(24, 35, 57, 0.65), rgba(24, 35, 57, 0.65)),
+        url(assets/bookin-background.jpg);
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    padding: clamp(50px, 7vw, 90px) clamp(16px, 5vw, 60px);
+    display: flex;
+    justify-content: center;
+}
+
+.booking-container {
+    max-width: 860px;
+    width: 100%;
+    text-align: center;
+    color: var(--white);
+}
+
+.booking-container h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 400;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+.booking-container .subtitle {
+    font-size: 1rem;
+    opacity: 0.85;
+    margin-bottom: 40px;
+}
+
+.contact-cards {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.contact-cards .card {
+    background: rgba(14, 14, 14, 0.2);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 22px 24px;
+    min-width: 180px;
+    flex: 1;
+    max-width: 220px;
+    transition: all 0.3s ease;
+}
+
+.contact-cards .card:hover {
+    border: 1px solid var(--white);
+    transform: scale(1.04);
+}
+
+.contact-cards .card .icon {
+    font-size: 1.6rem;
+}
+
+.contact-cards .card img {
+    width: 50px;
+    height: auto;
+}
+
+.contact-cards .card h3 {
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: var(--accent);
+}
+
+.contact-cards .card p {
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+.form-label {
+    color: var(--accent);
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+/* Form Container Card */
+.form-container {
+    background: rgba(14, 14, 14, 0.4);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: clamp(24px, 4vw, 40px);
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.form-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+/* Explicit Input Targeting (Excludes Checkbox) */
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="date"],
+.form-container select,
+.form-container textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    background: rgba(27, 27, 27, 0.85); /* Solid dark background for visibility */
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+    display: block;
+    box-sizing: border-box;
+}
+
+.form-container input[type="text"]:focus,
+.form-container input[type="email"]:focus,
+.form-container input[type="date"]:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+    border-color: var(--accent);
+}
+
+.form-container input::placeholder,
+.form-container textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Textarea specifics */
+.form-container textarea {
+    height: 140px;
+    resize: vertical;
+    margin-bottom: 20px;
+}
+
+/* Select Box specifics */
+.form-container select {
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+}
+.form-container select option {
+    color: #111; /* Makes dropdown options readable on white */
+}
+
+/* Date specifics */
+.form-container input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+/* TERMS CHECKBOX LAYOUT */
+.terms-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 24px;
+    text-align: left;
+}
+
+.terms-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 3px 0 0 0;
+    cursor: pointer;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+.terms-container label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.4;
+    cursor: pointer;
+    user-select: none;
+}
+
+.terms-container .terms-link {
+    color: var(--accent);
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.terms-container .terms-link:hover {
+    color: var(--white);
+}
+
+/* Submit Button */
+.form-container button[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    border-radius: 30px;
+    border: none;
+    background: var(--accent);
+    color: var(--base);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 5px 0 var(--accent-shadow);
+    transition: all 0.2s ease;
+    display: block;
+}
+
+.form-container button[type="submit"]:hover {
+    background: var(--accent-dark);
+    color: var(--white);
+    transform: translateY(2px);
+    box-shadow: 0 3px 0 var(--accent-shadow);
+}
+
+
+/* =========================================================
+   ===== MODAL POPUP =====
+   ========================================================= */
 .terms-modal {
-    display: none; /* Hidden by default (controlled via JS) */
+    display: none; 
     position: fixed;
     top: 0;
     left: 0;
@@ -1085,7 +1065,6 @@ body {
     animation: fadeInModal 0.25s ease-out;
 }
 
-/* The main layout framework structure card container inside the modal */
 .terms-modal-content {
     background-color: #ffffff;
     margin: 5vh auto; 
@@ -1104,7 +1083,6 @@ body {
     justify-content: flex-start;
 }
 
-/* Close Window Cross Sign Button */
 .terms-modal-close {
     position: absolute;
     top: 15px;
@@ -1123,7 +1101,6 @@ body {
     transform: scale(1.15);
 }
 
-/* Header Text Frame Elements wrapper layout */
 .terms-text-header {
     text-align: center;
     font-family: 'Cormorant Garamond', Georgia, serif;
@@ -1149,7 +1126,6 @@ body {
     font-weight: 500;
 }
 
-/* Scrollable document legal text body container layout block rules */
 .terms-text-body {
     overflow-y: auto; 
     padding-right: 12px;
@@ -1161,7 +1137,6 @@ body {
     flex-grow: 1;    
 }
 
-/* Headings inside the scroll area */
 .terms-text-body h3 {
     color: #111;
     border-left: 3px solid var(--accent, #CFC7B0);
@@ -1181,13 +1156,11 @@ body {
     font-weight: 600;
 }
 
-/* Base Paragraph structure layouts */
 .terms-text-body p {
     margin: 0 0 12px 0;
     text-align: left;
 }
 
-/* Unordered list points tracking modules alignment settings */
 .terms-text-body ul { 
     padding-left: 20px; 
     margin: 0 0 15px 0; 
@@ -1201,7 +1174,6 @@ body {
     color: #444;
 }
 
-/* Alert/Highlighted quote block structures */
 .terms-text-body blockquote {
     background: #fdfbf7;
     border-left: 4px solid var(--base, #182339);
@@ -1216,7 +1188,6 @@ body {
     color: #000;
 }
 
-/* Legal text base segment structural disclaimer block */
 .terms-footer-note {
     text-align: center;
     margin-top: 30px;
@@ -1229,61 +1200,6 @@ body {
 @keyframes fadeInModal {
     from { opacity: 0; }
     to { opacity: 1; }
-}
-
-/* Responsive updates for mobile interfaces */
-@media (max-width: 640px) {
-    .terms-modal-content {
-        margin: 2vh auto;
-        height: 96vh;
-        width: 94%;
-        padding: 20px;
-    }
-    .terms-modal-close {
-        top: 10px;
-        right: 15px;
-    }
-}
-
-/* 1. Forces the layout wrapper into a horizontal row block */
-.terms-container {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: flex-start !important; /* Vertically aligns checkbox with the first line of text */
-    gap: 10px !important;
-    margin: 20px 0 24px 0 !important;
-    text-align: left !important;
-    width: 100%;
-}
-
-/* 2. Overrides the 100% width block stretching bug on the checkbox input */
-.terms-container input[type="checkbox"] {
-    width: auto !important;
-    display: inline-block !important;
-    margin: 0 !important;
-    transform: translateY(3px) !important; /* Centers alignment with normal text line height heights */
-    flex-shrink: 0 !important; /* Prevents checkbox from squishing on tiny mobile screens */
-    cursor: pointer;
-}
-
-/* 3. Cleans up the label element text layout flow alignment */
-.terms-container label {
-    display: inline !important;
-    font-size: 0.95rem !important;
-    color: var(--white) !important;
-    line-height: 1.4 !important;
-    text-align: left !important;
-    cursor: pointer;
-}
-
-/* 4. Ensures the link retains contrast visibility colors inside the form */
-.terms-container .terms-link {
-    color: var(--accent) !important;
-    text-decoration: underline !important;
-    display: inline !important;
-}
-.terms-container .terms-link:hover {
-    color: var(--white) !important;
 }
 
 /* ===== FOOTER ===== */
@@ -1479,6 +1395,19 @@ body {
         height: 160px;
     }
 
+    /* Modal Mobile Fixes */
+    .terms-modal-content {
+        margin: 2vh auto;
+        height: 96vh;
+        width: 94%;
+        padding: 20px;
+    }
+
+    .terms-modal-close {
+        top: 10px;
+        right: 15px;
+    }
+
     .form-row {
         flex-direction: column;
         gap: 10px;
@@ -1489,7 +1418,7 @@ body {
         align-items: center;
     }
 
-    .card {
+    .contact-cards .card {
         max-width: 100%;
         width: 100%;
     }
