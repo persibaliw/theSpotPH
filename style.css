@@ -1244,6 +1244,48 @@ body {
         right: 15px;
     }
 }
+
+/* 1. Forces the layout wrapper into a horizontal row block */
+.terms-container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important; /* Vertically aligns checkbox with the first line of text */
+    gap: 10px !important;
+    margin: 20px 0 24px 0 !important;
+    text-align: left !important;
+    width: 100%;
+}
+
+/* 2. Overrides the 100% width block stretching bug on the checkbox input */
+.terms-container input[type="checkbox"] {
+    width: auto !important;
+    display: inline-block !important;
+    margin: 0 !important;
+    transform: translateY(3px) !important; /* Centers alignment with normal text line height heights */
+    flex-shrink: 0 !important; /* Prevents checkbox from squishing on tiny mobile screens */
+    cursor: pointer;
+}
+
+/* 3. Cleans up the label element text layout flow alignment */
+.terms-container label {
+    display: inline !important;
+    font-size: 0.95rem !important;
+    color: var(--white) !important;
+    line-height: 1.4 !important;
+    text-align: left !important;
+    cursor: pointer;
+}
+
+/* 4. Ensures the link retains contrast visibility colors inside the form */
+.terms-container .terms-link {
+    color: var(--accent) !important;
+    text-decoration: underline !important;
+    display: inline !important;
+}
+.terms-container .terms-link:hover {
+    color: var(--white) !important;
+}
+
 /* ===== FOOTER ===== */
 .footer {
     background: var(--base);
