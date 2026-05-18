@@ -1069,6 +1069,130 @@ body {
     cursor: not-allowed !important;
 }
 
+/* Checkbox Layout Line */
+.terms-container {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: sans-serif;
+    color: #333;
+}
+
+.terms-container input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #cfc7b0;
+}
+
+.terms-link {
+    color: #cfc7b0;
+    text-decoration: underline;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.terms-link:hover {
+    color: #111;
+}
+
+/* Modal Popup Window Background */
+.terms-modal {
+    display: none; 
+    position: fixed; 
+    z-index: 10000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: hidden; 
+    background-color: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(4px);
+}
+
+/* Modal Box Dimensions & Scroll config */
+.terms-modal-content {
+    background-color: #ffffff;
+    margin: 5% auto; 
+    padding: 30px;
+    border-radius: 12px;
+    width: 85%; 
+    max-width: 700px;
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    position: relative;
+    animation: fadeInModal 0.3s ease-out;
+}
+
+@keyframes fadeInModal {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Close Window Cross Sign Button */
+.terms-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    color: #aaa;
+    font-size: 32px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.terms-modal-close:hover {
+    color: #111;
+}
+
+/* Text Containers formatting Rules */
+.terms-text-header {
+    text-align: center;
+    font-family: 'Playfair Display', Georgia, serif;
+    margin-bottom: 15px;
+}
+.terms-text-header h2 { margin: 0; color: #111; letter-spacing: 2px;}
+.terms-text-header h3 { color: #cfc7b0; margin-top: 5px; font-size: 1.1rem; }
+
+.terms-text-body {
+    overflow-y: auto; 
+    padding-right: 15px;
+    font-family: sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #444;
+}
+
+.terms-text-body h3 {
+    color: #111;
+    border-left: 4px solid #cfc7b0;
+    padding-left: 8px;
+    margin-top: 25px;
+    font-size: 1.05rem;
+}
+
+.terms-text-body h4 { color: #555; margin-bottom: 5px; }
+.terms-text-body ul { padding-left: 20px; margin-bottom: 15px; }
+.terms-text-body li { margin-bottom: 8px; }
+
+.terms-text-body blockquote {
+    background: #fdfbf7;
+    border-left: 4px solid #111;
+    margin: 15px 0;
+    padding: 10px 15px;
+    font-style: italic;
+}
+
+.terms-footer-note {
+    text-align: center;
+    margin-top: 40px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
 /* ===== FOOTER ===== */
 .footer {
     background: var(--base);
