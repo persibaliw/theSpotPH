@@ -52,7 +52,32 @@
       color: rgba(207, 199, 176, 0.5);
     }
 
-    .sidebar button {
+    .sidebar-menu {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar button.nav-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: left;
+      font-family: "Outfit", sans-serif;
+      font-size: 0.9rem;
+      transition: 0.2s ease;
+    }
+
+    .sidebar button.nav-btn:hover {
+      background: rgba(207, 199, 176, 0.1);
+      border-color: var(--accent);
+    }
+
+    .sidebar button.logout-btn {
       margin-top: auto;
       background: transparent;
       border: 1px solid var(--border);
@@ -63,7 +88,7 @@
       transition: 0.3s;
     }
 
-    .sidebar button:hover {
+    .sidebar button.logout-btn:hover {
       background: var(--accent);
       color: var(--base);
     }
@@ -190,6 +215,7 @@
       backdrop-filter: blur(4px);
       align-items: center;
       justify-content: center;
+      z-index: 99999;
     }
 
     .modal-content {
@@ -248,6 +274,7 @@
     textarea,
     select {
       width: 100%;
+      box-sizing: border-box;
       padding: 10px;
       background: #1f2937 !important;
       color: #ffffff !important;
@@ -302,8 +329,8 @@
     }
 
     .select2-container--open {
-    z-index: 9999999 !important;
-  }
+      z-index: 9999999 !important;
+    }
   </style>
 </head>
 
@@ -312,8 +339,12 @@
     <div>
       <h2>The SpotPH</h2>
       <small>Admin Portal</small>
+      
+      <div class="sidebar-menu">
+         <button class="nav-btn" onclick="openStaffModal()">+ Create Staff Account</button>
+      </div>
     </div>
-    <button onclick="logout()">Logout Securely</button>
+    <button class="logout-btn" onclick="logout()">Logout Securely</button>
   </aside>
 
   <main class="main">
@@ -370,16 +401,43 @@
         <select id="staffSelect" class="js-staff-multiple" name="staff[]" multiple="multiple" style="width: 100%;">
         </select>
 
-        <label style="display: block; font-size: 0.8rem; margin-top: 15px; margin-bottom: 5px;">Confirm/Change
-          Date:</label>
-        <input type="date" id="rescheduleDate"
-          style="width: 100%; max-width: 378px; padding: 10px; background: #1f2937; color: #fff; border: 1px solid var(--border); border-radius: 4px;">
+        <label style="display: block; font-size: 0.8rem; margin-top: 15px; margin-bottom: 5px;">Confirm/Change Date:</label>
+        <input type="date" id="rescheduleDate" style="width: 100%; max-width: 378px; padding: 10px; background: #1f2937; color: #fff; border: 1px solid var(--border); border-radius: 4px;">
       </div>
 
       <div class="modal-actions">
         <button class="btn-accept" onclick="saveAssignment()">Confirm & Accept</button>
         <button class="btn-decline" onclick="updateStatus('declined')">Decline</button>
         <button class="btn-close" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="staffModal">
+    <div class="modal-content">
+      <h3>Create Staff Account</h3>
+      <p style="font-size: 0.85rem; color: rgba(207,199,176,0.6); margin-top: -5px; margin-bottom: 20px;">Register a new operational account to access assigned event listings.</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+        <div>
+          <label style="display: block; font-size: 0.8rem; margin-bottom: 5px;">Full Name:</label>
+          <input type="text" id="s_name" placeholder="e.g., Juan Dela Cruz">
+        </div>
+        
+        <div>
+          <label style="display: block; font-size: 0.8rem; margin-bottom: 5px;">Email Address:</label>
+          <input type="email" id="s_email" placeholder="e.g., juan@thespotph.store">
+        </div>
+        
+        <div>
+          <label style="display: block; font-size: 0.8rem; margin-bottom: 5px;">Password:</label>
+          <input type="password" id="s_password" placeholder="••••••••">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-accept" onclick="createStaffAccount()">Create Account</button>
+        <button class="btn-close" onclick="closeStaffModal()">Cancel</button>
       </div>
     </div>
   </div>
@@ -393,7 +451,6 @@
 
   try {
     const res = await fetch(`/api/${endpoint}`, fetchOptions);
-    
     const text = await res.text();
     
     if (!text || text.trim() === "") {
@@ -433,13 +490,10 @@
 
   async function fetchBookings() {
     const data = await apiFetch('get_bookings');
-    
     if (data.error === 'Unauthorized') { 
       window.location.href = 'admin-login.html'; 
       return; 
     }
-    
-    // Ensure data is an array
     bookings = Array.isArray(data) ? data : [];
     render();
   }
@@ -460,20 +514,16 @@
           <td>${b.package}</td>
           <td><span class="status ${b.status}">${b.status}</span></td>
           <td>
-            <button class="action-btn" onclick="openModal(${b.id})">
-                Review
-            </button>
+            <button class="action-btn" onclick="openModal(${b.id})">Review</button>
           </td>
           <td>
-            <button class="delete-btn" onclick="deleteBooking(${b.id})" style="background: #e05252; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-left: 5px;">
-                Delete
-            </button>
+            <button class="delete-btn" onclick="deleteBooking(${b.id})" style="background: #e05252; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; margin-left: 5px;">Delete</button>
           </td>
         </tr>
       `;
     });
     
-    document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">No bookings found.</td></tr>';
+    document.getElementById('tableBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;">No bookings found.</td></tr>';
     document.getElementById('statTotal').innerText = counts.total;
     document.getElementById('statPending').innerText = counts.pending;
     document.getElementById('statAccepted').innerText = counts.accepted;
@@ -507,6 +557,43 @@
     document.getElementById('bookingModal').style.display = 'none';
   }
 
+  /* Staff Modal Window Controls */
+  function openStaffModal() {
+    document.getElementById('staffModal').style.display = 'flex';
+  }
+
+  function closeStaffModal() {
+    document.getElementById('staffModal').style.display = 'none';
+    document.getElementById('s_name').value = '';
+    document.getElementById('s_email').value = '';
+    document.getElementById('s_password').value = '';
+  }
+
+  async function createStaffAccount() {
+    const name = document.getElementById('s_name').value.trim();
+    const email = document.getElementById('s_email').value.trim();
+    const password = document.getElementById('s_password').value.trim();
+
+    if (!name || !email || !password) {
+      alert("All fields are required to register a staff account.");
+      return;
+    }
+
+    const data = await apiFetch('create_staff', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+    });
+
+    if (data.success) {
+      alert("Staff account generated successfully.");
+      closeStaffModal();
+      await loadStaff(); // Refresh the active dropdown array registry dynamically
+    } else {
+      alert("Registration Error: " + (data.message || "Failed to compile record configuration."));
+    }
+  }
+
   async function updateStatus(status) {
     const data = await apiFetch('update_status', {
       method: 'POST',
@@ -521,21 +608,21 @@
   }
 
   async function loadStaff() {
-  const staff = await apiFetch('get_staff'); 
-  if (!Array.isArray(staff)) return;
+    const staff = await apiFetch('get_staff'); 
+    if (!Array.isArray(staff)) return;
 
-  const select = document.getElementById('staffSelect');
-  select.innerHTML = '';
+    const select = document.getElementById('staffSelect');
+    select.innerHTML = '';
 
-  staff.forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s.id;
-    opt.textContent = s.name;
-    select.appendChild(opt);
-  });
+    staff.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id;
+      opt.textContent = s.name;
+      select.appendChild(opt);
+    });
 
-  $('.js-staff-multiple').trigger('change');
-}
+    $('.js-staff-multiple').trigger('change');
+  }
   
   async function deleteBooking(bookingId) {
     if (!confirm("Are you sure you want to permanently delete this booking request?")) {
@@ -552,11 +639,7 @@
 
         if (data.success) {
             alert("Booking successfully deleted.");
-            if (typeof loadBookings === 'function') {
-                loadBookings(); 
-            } else {
-                location.reload();
-            }
+            fetchBookings();
         } else {
             alert("Error: " + (data.message || "Could not delete booking."));
         }
@@ -600,12 +683,9 @@
   // INITIALIZE
   (async () => {
     try {
-        const auth = await checkAuth(); 
-        
-        // Add a 300ms "Settling" delay for Vercel Session synchronization
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await checkAuth(); 
+        await new Promise(resolve => setTimeout(resolve, 300)); // Vercel Session Sync Delay
 
-        // Run these one by one to avoid hitting the DB/Session too fast
         await fetchBookings();
         await loadStaff();
         
