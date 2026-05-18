@@ -1068,178 +1068,187 @@ body {
     opacity: 0.4;
     cursor: not-allowed !important;
 }
-
-/* --- FIXED MODAL CONTAINER STYLING --- */
-
-/* The main layout wrapper inside the modal */
-.terms-modal-content {
-    background-color: #ffffff;
-    margin: 5% auto; 
-    padding: 30px;
-    border-radius: 12px;
-    width: 85%; 
-    max-width: 700px;
-    height: 75vh;
-    
-    /* Change flex behavior to layout sequentially, removing the center alignment bugs */
-    display: flex;
-    flex-direction: column;
-    align-items: stretch; /* Forces children to take full width properly */
-    justify-content: flex-start; /* Starts layout from top instead of smashing to center */
-    
-    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
-    position: relative;
-    box-sizing: border-box; /* Makes sure padding doesn't break height metrics */
+.terms-modal {
+    display: none; /* Hidden by default (controlled via JS) */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent backdrop shadow */
+    backdrop-filter: blur(5px); /* Soft blur effect over backend site content */
+    z-index: 2000; /* Keeps window above the navigation header bar overlay layers */
+    animation: fadeInModal 0.25s ease-out;
 }
 
-/* Header Text Layout */
+/* The main layout framework structure card container inside the modal screen wrapper */
+.terms-modal-content {
+    background-color: #ffffff;
+    margin: 5vh auto; 
+    padding: clamp(20px, 4vw, 35px);
+    border-radius: 12px;
+    width: 90%; 
+    max-width: 700px;
+    height: 80vh;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    position: relative;
+    box-sizing: border-box; 
+    
+    /* Strict layout tracking control targets */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; 
+    justify-content: flex-start;
+}
+
+/* Close Window Window Exit Vector button cross symbol */
+.terms-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #999;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+    line-height: 1;
+    z-index: 10;
+}
+
+.terms-modal-close:hover {
+    color: #111;
+    transform: scale(1.15);
+}
+
+/* Header Text Frame Elements wrapper layout */
 .terms-text-header {
     text-align: center;
     font-family: 'Cormorant Garamond', Georgia, serif;
     margin-bottom: 20px;
-    flex-shrink: 0; /* Prevents the header from getting squished by scroll window */
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0; /* Prevents title framework tracking frames from resizing */
 }
 
 .terms-text-header h2 { 
-    margin: 0 0 5px 0; 
+    margin: 0 0 4px 0; 
     color: #111; 
     letter-spacing: 2px;
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    font-weight: 600;
 }
 
-.terms-text-header h3 { 
-    color: #cfc7b0; 
-    margin: 5px 0 15px 0; 
-    font-size: 1.1rem; 
+.terms-text-header p {
+    margin: 0 0 2px 0;
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
     letter-spacing: 1px;
 }
 
-/* Scrollable Text Body Layout */
+.terms-text-header h3 { 
+    color: var(--accent-dark, #86806f); 
+    margin: 10px 0 10px 0; 
+    font-size: 1.05rem; 
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Scrollable document legal text body container layout block rules */
 .terms-text-body {
     overflow-y: auto; 
-    padding-right: 15px;
+    padding-right: 12px;
     font-family: 'Outfit', sans-serif;
     font-size: 0.95rem;
     line-height: 1.6;
     color: #444;
-    
-    /* CRITICAL FIXES */
-    text-align: left; /* Restores standard legal text reading alignment */
-    flex-grow: 1;    /* Tells body container to take up remaining height nicely */
+    text-align: left; /* Strict reset rule enforcement overrides framework tracking issues */
+    flex-grow: 1;    
 }
 
-/* Headings inside the scroll area */
+/* Headings targeting sections inside the main active inner text frame block */
 .terms-text-body h3 {
     color: #111;
-    border-left: 3px solid #cfc7b0;
+    border-left: 3px solid var(--accent, #CFC7B0);
     padding-left: 10px;
     margin: 25px 0 12px 0;
     font-size: 1.1rem;
     font-family: 'Outfit', sans-serif;
     text-align: left;
+    font-weight: 600;
 }
 
 .terms-text-body h4 { 
-    color: #555; 
-    margin: 15px 0 8px 0; 
+    color: #333; 
+    margin: 18px 0 8px 0; 
+    font-size: 1rem;
     text-align: left;
+    font-weight: 600;
 }
 
-/* Paragraphs and Lists formatting updates */
+/* Base Paragraph structure layouts rule targets */
 .terms-text-body p {
     margin: 0 0 12px 0;
     text-align: left;
 }
 
+/* Unordered list points tracking modules alignment settings values rules specifications */
 .terms-text-body ul { 
     padding-left: 20px; 
     margin: 0 0 15px 0; 
     text-align: left;
+    list-style: square; /* Structural identifier indicator dots format styling rule */
 }
 
 .terms-text-body li { 
     margin-bottom: 8px; 
     text-align: left;
+    color: #444;
 }
 
-/* Highlighted Note Blocks */
+/* Alert/Highlighted quote block structures formatting parameters block profiles specification rules targets */
 .terms-text-body blockquote {
     background: #fdfbf7;
-    border-left: 4px solid #111;
+    border-left: 4px solid var(--base, #182339);
     margin: 15px 0;
     padding: 12px 15px;
     font-style: italic;
     text-align: left;
+    border-radius: 0 6px 6px 0;
 }
 
 .terms-text-body blockquote strong {
-    color: #111;
+    color: #000;
 }
 
-@keyframes fadeInModal {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* Close Window Cross Sign Button */
-.terms-modal-close {
-    position: absolute;
-    top: 15px;
-    right: 25px;
-    color: #aaa;
-    font-size: 32px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.terms-modal-close:hover {
-    color: #111;
-}
-
-/* Text Containers formatting Rules */
-.terms-text-header {
-    text-align: center;
-    font-family: 'Playfair Display', Georgia, serif;
-    margin-bottom: 15px;
-}
-.terms-text-header h2 { margin: 0; color: #111; letter-spacing: 2px;}
-.terms-text-header h3 { color: #cfc7b0; margin-top: 5px; font-size: 1.1rem; }
-
-.terms-text-body {
-    overflow-y: auto; 
-    padding-right: 15px;
-    font-family: sans-serif;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #444;
-}
-
-.terms-text-body h3 {
-    color: #111;
-    border-left: 4px solid #cfc7b0;
-    padding-left: 8px;
-    margin-top: 25px;
-    font-size: 1.05rem;
-}
-
-.terms-text-body h4 { color: #555; margin-bottom: 5px; }
-.terms-text-body ul { padding-left: 20px; margin-bottom: 15px; }
-.terms-text-body li { margin-bottom: 8px; }
-
-.terms-text-body blockquote {
-    background: #fdfbf7;
-    border-left: 4px solid #111;
-    margin: 15px 0;
-    padding: 10px 15px;
-    font-style: italic;
-}
-
+/* Legal text base segment structural disclaimer block rule targets */
 .terms-footer-note {
     text-align: center;
-    margin-top: 40px;
-    border-top: 1px solid #eee;
+    margin-top: 30px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
     padding-top: 15px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* Smooth fade element viewport active insertion transition animations rules specs values profile triggers */
+@keyframes fadeInModal {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive updates for mobile interfaces */
+@media (max-width: 640px) {
+    .terms-modal-content {
+        margin: 2vh auto;
+        height: 96vh;
+        width: 94%;
+        padding: 20px;
+    }
+    .terms-modal-close {
+        top: 10px;
+        right: 15px;
+    }
 }
 
 /* ===== FOOTER ===== */
