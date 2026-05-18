@@ -609,38 +609,34 @@
       </div>
     </footer>
   </main>
-
-  <script src="script.js"></script>
-
+<script src="script.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const modal = document.getElementById("termsModal");
-        const link = document.getElementById("openTermsLink");
-        const closeBtn = document.querySelector(".terms-modal-close");
+      const modal = document.getElementById("termsModal");
+      const link = document.getElementById("openTermsLink");
+      const closeBtn = document.querySelector(".terms-modal-close");
 
-        // Open modal when clicking the text link
-        link.addEventListener("click", function(e) {
-            e.preventDefault();
-            modal.style.display = "block";
-            document.body.style.overflow = "hidden"; // Locks background scroll
-        });
+      // Open modal when clicking the text link
+      link.addEventListener("click", function(e) {
+          e.preventDefault();
+          modal.style.display = "block";
+          document.body.style.overflow = "hidden"; // Locks background scroll
+      });
 
-        // Close modal when clicking 'x'
-        closeBtn.addEventListener("click", function() {
-            modal.style.display = "none";
-            document.body.style.overflow = "auto"; // Restores background scroll
-        });
+      // Close modal when clicking 'x'
+      closeBtn.addEventListener("click", function() {
+          modal.style.display = "none";
+          document.body.style.overflow = "auto"; // Restores background scroll
+      });
 
-        // Close modal if clicking anywhere outside the main frame content block
-        window.addEventListener("click", function(e) {
-            if (e.target === modal) {
-                modal.style.display = "none";
-                document.body.style.overflow = "auto";
-            }
-        });
+      // Close modal if clicking anywhere outside the main frame content block
+      window.addEventListener("click", function(e) {
+          if (e.target === modal) {
+              modal.style.display = "none";
+              document.body.style.overflow = "auto";
+          }
+      });
     });
   </script>
 </body>
-
 </html>
-  
