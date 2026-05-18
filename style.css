@@ -549,6 +549,96 @@ body {
     color: var(--accent);
 }
 
+/* ===== MEET THE TEAM STYLING ===== */
+.team-section {
+    padding: 60px 20px;
+    text-align: center;
+    background: transparent; /* Seamlessly blends into your background */
+}
+
+.team-intro h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.team-intro p {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 40px;
+}
+
+.team-grid {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    flex-wrap: wrap; /* Automatically drops to columns on mobile screens */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.team-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 30px 20px;
+    width: 280px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.avatar-wrapper {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 20px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures images crop perfectly into the circle frame */
+    transition: transform 0.5s ease;
+}
+
+.team-card:hover .avatar-wrapper img {
+    transform: scale(1.08); /* Tiny dynamic zoom when hovering over the card */
+}
+
+.team-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.team-card .role {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent, #e05252); /* Matches your calendar highlight colors */
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.team-card .bio {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+}
+
 /* ===== GALLERY ===== */
 .gallery-section {
     background-image:
