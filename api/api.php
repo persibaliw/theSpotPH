@@ -17,7 +17,7 @@ session_start();
 
 header('Content-Type: application/json');
 
-// 2. IMPORT PHPMailer (Must be at the top level, before any logic)
+// 2. IMPORT PHPMAILER
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -26,11 +26,11 @@ require 'PHPMailer/PHPMailer.php';
 require 'PHPMailer/SMTP.php';
 
 // 3. DATABASE CONNECTION
-$host=getenv('DB_HOST');
-$port=getenv('DB_PORT');
-$db=getenv('DB_NAME');
-$user=getenv('DB_USER');
-$pass=getenv('DB_PASS');
+$host = getenv('DB_HOST');
+$port = getenv('DB_PORT');
+$db   = getenv('DB_NAME');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASS');
 $ssl_ca = __DIR__ . '/certs/ca.pem'; 
 
 $action = $_GET['action'] ?? ''; 
@@ -49,7 +49,7 @@ try {
     die(json_encode(['success' => false, 'message' => 'Database connection failed']));
 }
 
-// 4. ACTIONS LOGIC
+// 4. ROUTING & ACTIONS LOGIC
 if ($action === 'login') {
     $data = json_decode(file_get_contents('php://input'), true);
     $email = $data['email'] ?? '';
@@ -97,7 +97,6 @@ elseif ($action === 'get_profile') {
 elseif ($action === 'book') {
     $data = json_decode(file_get_contents('php://input'), true);
 
-    // 1. Validate Date Not in Past
     $bookingDate = strtotime($data['date']);
     $today = strtotime(date('Y-m-d'));
     if ($bookingDate < $today) {
@@ -106,10 +105,8 @@ elseif ($action === 'book') {
         exit;
     }
 
-    // 2. Validate PH Phone Pattern if provided
     $phone = trim($data['phone'] ?? '');
     if (!empty($phone)) {
-        // PHP pattern equivalent to JavaScript validation checker
         if (!preg_match('/^(?:\+639|639|09)\d{9}$/', $phone)) {
             ob_clean();
             echo json_encode(['success' => false, 'message' => 'Invalid Philippine phone number structure.']);
@@ -195,6 +192,43 @@ elseif ($action === 'get_staff') {
     $results = $stmt->fetchAll();
     ob_clean();
     echo json_encode($results);
+    exit;
+}
+
+elseif ($action === 'create_staff') {
+    if (($_SESSION['role'] ?? '') !== 'admin') { 
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'Unauthorized access block.']);
+        exit; 
+    }
+    
+    $data = json_decode(file_get_contents('php://input'), true);
+    $name = trim($data['name'] ?? '');
+    $email = trim($data['email'] ?? '');
+    $plainPassword = trim($data['password'] ?? '');
+
+    if (empty($name) || empty($email) || empty($plainPassword)) {
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'All profile data fields are mandatory.']);
+        exit;
+    }
+
+    // Email duplication protection
+    $checkStmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+    $checkStmt->execute([$email]);
+    if ($checkStmt->fetch()) {
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'An operational account under this email already exists.']);
+        exit;
+    }
+
+    $hashedPassword = md5($plainPassword);
+
+    $stmt = $pdo->prepare("INSERT INTO users (full_name, email, password, role) VALUES (?, ?, ?, 'staff')");
+    $success = $stmt->execute([$name, $email, $hashedPassword]);
+
+    ob_clean();
+    echo json_encode(['success' => $success]);
     exit;
 }
 
