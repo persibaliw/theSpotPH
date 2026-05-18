@@ -624,28 +624,23 @@
     $('.js-staff-multiple').trigger('change');
   }
   
-  async function deleteBooking(bookingId) {
-    if (!confirm("Are you sure you want to permanently delete this booking request?")) {
-        return;
-    }
+ async function deleteBooking(bookingId) {
+  if (!confirm("Are you sure you want to permanently delete this booking request?")) {
+      return;
+  }
 
-    try {
-        const res = await fetch('api/api.php?action=delete_booking', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: bookingId })
-        });
-        const data = await res.json();
+  const data = await apiFetch('delete_booking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: bookingId })
+  });
 
-        if (data.success) {
-            alert("Booking successfully deleted.");
-            fetchBookings();
-        } else {
-            alert("Error: " + (data.message || "Could not delete booking."));
-        }
-    } catch (err) {
-        alert("Network error. Could not connect to server.");
-    }
+  if (data.success) {
+      alert("Booking successfully deleted.");
+      fetchBookings();
+  } else {
+      alert("Error: " + (data.message || "Could not delete booking."));
+  }
 }
 
   async function saveAssignment() {
