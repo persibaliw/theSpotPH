@@ -243,10 +243,91 @@ elseif ($action === 'assign_staff') {
 }
 
 elseif ($action === 'update_status') {
-    if (($_SESSION['role'] ?? '') !== 'admin') { exit; }
+    if (($_SESSION['role'] ?? '') !== 'admin') { 
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        exit; 
+    }
+    
     $data = json_decode(file_get_contents('php://input'), true);
+    $status = $data['status'] ?? ''; // e.g., 'accepted' or 'declined'
+    $bookingId = $data['id'] ?? null;
+
+    if (!$bookingId || empty($status)) {
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'Missing required data.']);
+        exit;
+    }
+
+    // 1. Fetch the client's name, email, event date, and token before updating
+    $fetchStmt = $pdo->prepare("SELECT name, email, event_date, token FROM bookings WHERE id = ?");
+    $fetchStmt->execute([$bookingId]);
+    $booking = $fetchStmt->fetch();
+
+    if (!$booking) {
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'Booking not found.']);
+        exit;
+    }
+
+    // 2. Update the status in the database
     $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ?");
-    $success = $stmt->execute([$data['status'], $data['id']]);
+    $success = $stmt->execute([$status, $bookingId]);
+
+    // 3. If the database update succeeds, trigger the email notification
+    if ($success) {
+        $mail = new PHPMailer(true);
+        try {
+            // SMTP Configurations (matching your 'book' routing)
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'spotph.13@gmail.com';
+            $mail->Password   = 'qigt ezeu lqvl enhm';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+
+            $mail->setFrom('spotph.13@gmail.com', 'TheSpotPH');
+            $mail->addAddress($booking['email'], $booking['name']);
+
+            $formattedDate = date("F j, Y", strtotime($booking['event_date']));
+            $trackingUrl   = "https://www.thespotph.store/track.php?id=" . $booking['token'];
+            
+            // Customize messaging states cleanly based on admin decision
+            $statusTitle = ucfirst($status); 
+            $statusColor = ($status === 'accepted') ? '#2e7d32' : '#c62828'; // Green for accepted, Red for declined
+
+            if ($status === 'accepted') {
+                $messageBody = "
+                    <p>Great news! We have reviewed your request and your booking quote for <strong>$formattedDate</strong> has been <strong>ACCEPTED</strong>.</p>
+                    <p>Our team will reach out shortly to finalize the setup details and coordinate the next steps regarding your downpayment reservation.</p>
+                ";
+            } else {
+                $messageBody = "
+                    <p>Thank you for reaching out to us. We regret to inform you that your booking request for <strong>$formattedDate</strong> has been <strong>DECLINED</strong> due to schedule conflicts or capacity limits.</p>
+                    <p>We hope we can serve you at a future event!</p>
+                ";
+            }
+
+            $mail->isHTML(true);
+            $mail->Subject = "Booking Request Update: $statusTitle - TheSpotPH";
+            $mail->Body    = "
+                <div style='font-family: sans-serif; max-width: 600px; border: 1px solid #eee; padding: 20px;'>
+                    <h2 style='color: #cfc7b0;'>Hello " . htmlspecialchars($booking['name']) . "!</h2>
+                    <p style='font-size: 16px; font-weight: bold; color: $statusColor;'>Status Update: $statusTitle</p>
+                    $messageBody
+                    <p>You can view your real-time live booking tracking page link details here:</p>
+                    <a href='$trackingUrl' style='display:inline-block; padding:12px 25px; background:#cfc7b0; color:#111; text-decoration:none; border-radius:30px; font-weight:bold;'>View Booking Status</a>
+                    <p style='margin-top:20px; font-size:12px; color:#888;'>Reference ID: " . $booking['token'] . "</p>
+                </div>
+            ";
+
+            $mail->send();
+        } catch (Exception $e) {
+            // Fails silently to prevent breaking the API execution return flow if mail servers timing out
+        }
+    }
+
     ob_clean();
     echo json_encode(['success' => $success]);
     exit;
