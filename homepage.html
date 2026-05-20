@@ -416,12 +416,10 @@
             <div class="form-row">
               <input type="text" id="b_phone" placeholder="Phone Number (09xx or +639xx)" maxlength="13" />
               <input 
-                type="text" 
+                type="date" 
                 id="b_date" 
-                placeholder="Event Date" 
-                onfocus="(this.type='date')" 
-                onblur="if(!this.value) this.type='text'" 
                 required 
+                onchange="this.classList.toggle('has-value', !!this.value)" 
               />
             </div>
 
