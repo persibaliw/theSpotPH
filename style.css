@@ -387,7 +387,7 @@ body {
 /* ===== PACKAGES ===== */
 .packages-section {
     background: var(--base);
-    padding: clamp(40px, 6vw, 80px) clamp(20px, 5vw, 60px);
+    padding: 30px 20px;
 }
 
 .packages-section .divider {
