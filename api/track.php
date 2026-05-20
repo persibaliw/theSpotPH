@@ -216,11 +216,6 @@ if (!$booking) {
             </div>
 
             <div class="receipt-row">
-                <span class="label">Selected Package</span>
-                <span class="value" style="color: #cfc7b0; font-weight: 600;"><?php echo htmlspecialchars($booking['package']); ?></span>
-            </div>
-
-            <div class="receipt-row">
                 <span class="label">Drink Set Menu</span>
                 <span class="value" style="color: #cfc7b0; font-weight: 600;"><?php echo htmlspecialchars($booking['drink_set'] ?? 'Not Specified'); ?></span>
             </div>
