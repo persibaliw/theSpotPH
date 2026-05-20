@@ -1009,6 +1009,41 @@ input[type="date"]::-webkit-date-and-time-value {
     display: block;
 }
 
+.form-container input[type="date"] {
+    position: relative;
+}
+
+.form-container input[type="date"]:not(.has-value):not(:focus) {
+    color: transparent !important;
+}
+
+.form-container input[type="date"]:not(.has-value):focus {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.form-container input[type="date"]:not(.has-value):not(:focus)::before {
+    content: "Event Date";
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    pointer-events: none;
+}
+
+.form-container input[type="date"].has-value {
+    color: var(--white) !important;
+}
+
+.form-container input[type="date"]::-webkit-date-and-time-value {
+    color: inherit;
+    min-height: 1.2em;
+    display: block;
+    text-align: left;
+}
+
 .form-container input[type="date"]:invalid {
     color: rgba(255, 255, 255, 0.5);
 }
