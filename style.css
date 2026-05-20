@@ -985,19 +985,28 @@ body {
     margin-bottom: 20px;
 }
 
-/* Select Box specifics */
 .form-container select {
     color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
 }
 .form-container select option {
-    color: #111; /* Makes dropdown options readable on white */
+    color: white;
 }
 
-/* Date specifics */
 .form-container input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
     cursor: pointer;
+}
+
+input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+    color: inherit;
+    min-height: 1.2em;
+    display: block;
 }
 
 /* TERMS CHECKBOX LAYOUT */
