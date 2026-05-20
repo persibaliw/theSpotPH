@@ -1009,6 +1009,16 @@ input[type="date"]::-webkit-date-and-time-value {
     display: block;
 }
 
+.form-container input[type="date"]:invalid {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-container input[type="date"]::-webkit-date-and-time-value {
+    color: inherit;
+    min-height: 1.2em;
+    display: block;
+}
+
 /* TERMS CHECKBOX LAYOUT */
 .terms-container {
     display: flex;
