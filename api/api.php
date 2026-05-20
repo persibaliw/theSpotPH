@@ -115,9 +115,10 @@ elseif ($action === 'book') {
     }
     
     $token = bin2hex(random_bytes(16));
+    $drink_set = $data['set'] ?? null;
     
-    $stmt = $pdo->prepare("INSERT INTO bookings (token, name, email, phone, event_date, package, message) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $success = $stmt->execute([$token, $data['name'], $data['email'], $data['phone'], $data['date'], $data['package'], $data['message']]);
+    $stmt = $pdo->prepare("INSERT INTO bookings (token, name, email, phone, event_date, package, drink_set, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $success = $stmt->execute([$token, $data['name'], $data['email'], $data['phone'], $data['date'], $data['package'], $drink_set, $data['message']]);
 
     if ($success) {
         $mail = new PHPMailer(true);
@@ -162,7 +163,7 @@ elseif ($action === 'get_calendar') {
         $stmt = $pdo->query("SELECT id, name as title, event_date as start, status FROM bookings");
         $res = $stmt->fetchAll();
     } elseif ($type === 'staff' && $user_id) {
-        $stmt = $pdo->prepare("SELECT id, name as title, event_date as start, package, message FROM bookings WHERE FIND_IN_SET(?, assigned_user_id) AND status = 'accepted'");
+        $stmt = $pdo->prepare("SELECT id, name as title, event_date as start, package, drink_set, message FROM bookings WHERE FIND_IN_SET(?, assigned_user_id) AND status = 'accepted'");
         $stmt->execute([$user_id]);
         $res = $stmt->fetchAll();
     } else {
