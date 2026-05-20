@@ -131,7 +131,7 @@
           </div>
         </div>
         <div class="menu-customize">
-          <a href="#booking"><em>Want to customize your own menu?</em></a>
+          <a href="#" id="openSetsLink"><em>Want to customize your own menu?</em></a>
         </div>
       </div>
     </section>
@@ -255,6 +255,7 @@
       </div>
       <div class="divider-bottom"></div>
     </section>
+
     <section class="gallery-section" id="gallery">
       <div class="gallery-intro">
         <h1>Event Gallery</h1>
@@ -339,23 +340,19 @@
             eventTextColor: '#ffffff',
 
             dateClick: function (info) {
-              // 1. Get today's local date formatted exactly as "YYYY-MM-DD"
               const now = new Date();
               const todayString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-              // 2. If the clicked date is before today, block it completely
               if (info.dateStr < todayString) {
                 alert("You cannot select a past date for booking.");
-                return; // Stop the code right here so it doesn't fill the input form
+                return;
               }
 
-              // 3. If it's valid, update the input field and scroll down smoothly
               const dateInput = document.getElementById('b_date');
               if (dateInput) {
                 dateInput.value = info.dateStr;
                 dateInput.classList.add('has-value');
 
-                // Force standard style update listener triggers from script.js
                 dateInput.dispatchEvent(new Event('change'));
 
                 document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
@@ -415,12 +412,7 @@
 
             <div class="form-row">
               <input type="text" id="b_phone" placeholder="Phone Number (09xx or +639xx)" maxlength="13" />
-              <input 
-                type="date" 
-                id="b_date" 
-                required 
-                onchange="this.classList.toggle('has-value', !!this.value)" 
-              />
+              <input type="date" id="b_date" required onchange="this.classList.toggle('has-value', !!this.value)" />
             </div>
 
             <div class="form-row">
@@ -429,6 +421,16 @@
                 <option value="Starter Package">Starter Package</option>
                 <option value="Premium Package">Premium Package</option>
                 <option value="Luxury Package">Luxury Package</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <select id="b_set" name="set" required>
+                <option value="" disabled selected>Select a Set</option>
+                <option value="Set A">Set A</option>
+                <option value="Set B">Set B</option>
+                <option value="Set C">Set C</option>
+                <option value="Set D">Set D</option>
               </select>
             </div>
 
@@ -489,31 +491,60 @@
   <script src="script.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const modal = document.getElementById("termsModal");
-      const link = document.getElementById("openTermsLink");
-      const closeBtn = document.querySelector(".terms-modal-close");
+      const termsModal = document.getElementById("termsModal");
+      const termsLink = document.getElementById("openTermsLink");
+      const termsCloseBtn = document.querySelector("#termsModal .terms-modal-close");
 
-      // Open modal when clicking the text link
-      link.addEventListener("click", function (e) {
+      termsLink.addEventListener("click", function (e) {
         e.preventDefault();
-        modal.style.display = "block";
-        document.body.style.overflow = "hidden"; // Locks background scroll
+        termsModal.style.display = "block";
+        document.body.style.overflow = "hidden";
       });
 
-      // Close modal when clicking 'x'
-      closeBtn.addEventListener("click", function () {
-        modal.style.display = "none";
-        document.body.style.overflow = "auto"; // Restores background scroll
+      termsCloseBtn.addEventListener("click", function () {
+        termsModal.style.display = "none";
+        document.body.style.overflow = "auto";
       });
 
-      // Close modal if clicking anywhere outside the main frame content block
+      const setsModal = document.getElementById("setsModal");
+      const setsLink = document.getElementById("openSetsLink");
+      const setsCloseBtn = document.querySelector("#setsModal .sets-modal-close");
+
+      setsLink.addEventListener("click", function (e) {
+        e.preventDefault();
+        setsModal.style.display = "block";
+        document.body.style.overflow = "hidden";
+      });
+
+      setsCloseBtn.addEventListener("click", function () {
+        setsModal.style.display = "none";
+        document.body.style.overflow = "auto";
+      });
+
       window.addEventListener("click", function (e) {
-        if (e.target === modal) {
-          modal.style.display = "none";
+        if (e.target === termsModal) {
+          termsModal.style.display = "none";
+          document.body.style.overflow = "auto";
+        }
+        if (e.target === setsModal) {
+          setsModal.style.display = "none";
           document.body.style.overflow = "auto";
         }
       });
     });
+
+    // --- Function to handle selecting a set ---
+    function selectSet(setName) {
+      document.getElementById("setsModal").style.display = "none";
+      document.body.style.overflow = "auto";
+      
+      const setDropdown = document.getElementById("b_set");
+      if(setDropdown) {
+         setDropdown.value = setName;
+      }
+      
+      document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+    }
   </script>
   <div id="termsModal" class="terms-modal">
     <div class="terms-modal-content">
@@ -732,6 +763,63 @@
 
         <div class="terms-footer-note">
           <p><em>The Spot PH — Imus, Cavite, Philippines — 2026</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="setsModal" class="terms-modal">
+    <div class="terms-modal-content sets-modal-wide">
+      <span class="sets-modal-close terms-modal-close">&times;</span>
+
+      <div class="terms-text-header">
+        <h2>CHOOSE YOUR DRINK SET</h2>
+        <p style="color: var(--text); font-size: 0.95rem;">Select a predefined menu to auto-fill your booking form.</p>
+        <hr style="margin-top: 15px; border: none; border-top: 1px solid rgba(0,0,0,0.08);" />
+      </div>
+
+      <div class="sets-grid">
+        <div class="set-card" onclick="selectSet('Set A')">
+          <div class="set-images">
+            <img src="assets/tequila-sunrise(stock).jpg" alt="Tequila Sunrise" onerror="this.src='assets/favicon.jpg'">
+            <img src="assets/manila-twilight.jpg" alt="Manila Twilight" onerror="this.src='assets/favicon.jpg'">
+          </div>
+          <h3>Set A</h3>
+          <p><strong>Cocktails:</strong> Tequila Sunrise & Manila Twilight</p>
+          <p><strong>Mocktails:</strong> Blue Lagoon & Grenadine Drink</p>
+          <div class="set-select-btn">Select Set A</div>
+        </div>
+
+        <div class="set-card" onclick="selectSet('Set B')">
+          <div class="set-images">
+            <img src="assets/tom-collins.jpg" alt="Tom Collins" onerror="this.src='assets/favicon.jpg'">
+            <img src="assets/pink-pussy.jpg" alt="Pink Pussy" onerror="this.src='assets/favicon.jpg'">
+          </div>
+          <h3>Set B</h3>
+          <p><strong>Cocktails:</strong> Tom Collins & Pink Pussy</p>
+          <p><strong>Mocktails:</strong> Blue Lagoon & Grenadine Drink</p>
+          <div class="set-select-btn">Select Set B</div>
+        </div>
+
+        <div class="set-card" onclick="selectSet('Set C')">
+          <div class="set-images">
+            <img src="assets/cuba-libre.jpg" alt="Cuba Libre" onerror="this.src='assets/favicon.jpg'">
+            <img src="assets/pink-pussy.jpg" alt="Pink Pussy" onerror="this.src='assets/favicon.jpg'">
+          </div>
+          <h3>Set C</h3>
+          <p><strong>Cocktails:</strong> Cuba Libre & Pink Pussy</p>
+          <p><strong>Mocktails:</strong> Blue Lagoon & Grenadine Drink</p>
+          <div class="set-select-btn">Select Set C</div>
+        </div>
+
+        <div class="set-card" onclick="selectSet('Set D')">
+          <div class="set-images">
+            <img src="assets/colorado-bulldog.jpg" alt="Colorado Bulldog" onerror="this.src='assets/favicon.jpg'">
+            <img src="assets/margarita.jpg" alt="Margarita" onerror="this.src='assets/favicon.jpg'">
+          </div>
+          <h3>Set D</h3>
+          <p><strong>Cocktails:</strong> Colorado Bulldog & Margarita</p>
+          <p><strong>Mocktails:</strong> Blue Lagoon & Grenadine Drink</p>
+          <div class="set-select-btn">Select Set D</div>
         </div>
       </div>
     </div>
