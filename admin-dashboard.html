@@ -342,6 +342,7 @@
       
       <div class="sidebar-menu">
          <button class="nav-btn" onclick="openStaffModal()">+ Create Staff Account</button>
+         <button class="nav-btn" onclick="openManageStaffModal()">🗑 Manage Staff Accounts</button>
       </div>
     </div>
     <button class="logout-btn" onclick="logout()">Logout Securely</button>
@@ -442,6 +443,30 @@
     </div>
   </div>
 
+  <div class="modal" id="manageStaffModal">
+    <div class="modal-content" style="width: 480px;">
+      <h3>Manage Staff Accounts</h3>
+      <p style="font-size: 0.85rem; color: rgba(207,199,176,0.6); margin-top: -5px; margin-bottom: 20px;">Review or permanently revoke backend access for registered staff accounts.</p>
+      
+      <div style="max-height: 280px; overflow-y: auto; border: 1px solid var(--border); border-radius: 4px; background: rgba(0,0,0,0.15);">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: rgba(0, 0, 0, 0.25);">
+              <th style="padding: 12px 10px; font-size: 0.8rem; color: var(--accent);">Staff Details</th>
+              <th style="padding: 12px 10px; font-size: 0.8rem; color: var(--accent); text-align: right;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="staffTableBody">
+             </tbody>
+        </table>
+      </div>
+
+      <div class="modal-actions" style="margin-top: 20px;">
+        <button class="btn-close" onclick="closeManageStaffModal()">Close Window</button>
+      </div>
+    </div>
+  </div>
+
 <script>
   async function apiFetch(endpoint, options = {}) {
   const fetchOptions = {
@@ -478,6 +503,7 @@
   }
 
   let bookings = [];
+  let staffList = []; // Array registry to hold staff metadata globally
   let currentId = null;
 
   $(document).ready(function () {
@@ -569,6 +595,35 @@
     document.getElementById('s_password').value = '';
   }
 
+  /* NEW CONTROLLERS: Manage Staff Account Open/Close Window Engines */
+  function openManageStaffModal() {
+    document.getElementById('manageStaffModal').style.display = 'flex';
+    populateStaffManagementTable();
+  }
+
+  function closeManageStaffModal() {
+    document.getElementById('manageStaffModal').style.display = 'none';
+  }
+
+  function populateStaffManagementTable() {
+    let html = '';
+    staffList.forEach(s => {
+      html += `
+        <tr>
+          <td style="padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.9rem;">
+            <strong>${s.name}</strong><br>
+            <small style="color: rgba(207,199,176,0.6);">${s.email || 'No Email Added'}</small>
+          </td>
+          <td style="padding: 12px 10px; text-align: right; border-bottom: 1px solid var(--border);">
+            <button class="delete-btn" onclick="deleteStaffAccount(${s.id}, '${s.name.replace(/'/g, "\\'")}')" style="background: #e05252; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-family: 'Outfit';">Delete</button>
+          </td>
+        </tr>
+      `;
+    });
+    
+    document.getElementById('staffTableBody').innerHTML = html || '<tr><td colspan="2" style="text-align:center; padding: 20px; color: rgba(207,199,176,0.4);">No staff accounts configured.</td></tr>';
+  }
+
   async function createStaffAccount() {
     const name = document.getElementById('s_name').value.trim();
     const email = document.getElementById('s_email').value.trim();
@@ -588,9 +643,29 @@
     if (data.success) {
       alert("Staff account generated successfully.");
       closeStaffModal();
-      await loadStaff(); // Refresh the active dropdown array registry dynamically
+      await loadStaff(); 
     } else {
       alert("Registration Error: " + (data.message || "Failed to compile record configuration."));
+    }
+  }
+
+  /* NEW ENGINE: Secure Account Removal Processor */
+  async function deleteStaffAccount(staffId, staffName) {
+    if (!confirm(`Are you sure you want to permanently delete the staff account for "${staffName}"?\nThis action cannot be undone.`)) {
+        return;
+    }
+
+    const data = await apiFetch('delete_staff', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: staffId })
+    });
+
+    if (data.success) {
+        alert("Staff account safely removed.");
+        await loadStaff(); // Dynamically updates Select2 dropdown arrays and the active table view instantly
+    } else {
+        alert("Error: " + (data.message || "Could not complete account destruction."));
     }
   }
 
@@ -609,12 +684,12 @@
 
   async function loadStaff() {
     const staff = await apiFetch('get_staff'); 
-    if (!Array.isArray(staff)) return;
+    staffList = Array.isArray(staff) ? staff : [];
 
     const select = document.getElementById('staffSelect');
     select.innerHTML = '';
 
-    staff.forEach(s => {
+    staffList.forEach(s => {
       const opt = document.createElement('option');
       opt.value = s.id;
       opt.textContent = s.name;
@@ -622,6 +697,11 @@
     });
 
     $('.js-staff-multiple').trigger('change');
+
+    // Automatically sync management layout components if open
+    if (document.getElementById('manageStaffModal').style.display === 'flex') {
+        populateStaffManagementTable();
+    }
   }
   
  async function deleteBooking(bookingId) {
