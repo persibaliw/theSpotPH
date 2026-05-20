@@ -541,11 +541,14 @@
       const setDropdown = document.getElementById("b_set");
       if(setDropdown) {
          setDropdown.value = setName;
+         setDropdown.style.color = "white";
+         setDropdown.classList.add("selected");
       }
       
       document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
     }
   </script>
+  
   <div id="termsModal" class="terms-modal">
     <div class="terms-modal-content">
       <span class="terms-modal-close">&times;</span>
