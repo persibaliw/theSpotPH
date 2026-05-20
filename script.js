@@ -235,9 +235,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const payload = {
                 name: document.getElementById('b_name').value,
                 email: document.getElementById('b_email').value,
-                phone: rawPhone,
+                phone: document.getElementById('b_phone').value,
                 date: document.getElementById('b_date').value,
-                package: pkgSelect ? pkgSelect.value : "",
+                package: document.getElementById('b_package').value,
+                set: document.getElementById('b_set').value,
                 message: document.getElementById('b_message').value
             };
 
