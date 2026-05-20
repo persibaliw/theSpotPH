@@ -208,6 +208,12 @@ document.addEventListener('DOMContentLoaded', () => {
             pkgSelect.style.color = pkgSelect.value === "" ? "rgba(255, 255, 255, 0.5)" : "white";
         });
     }
+    
+    if (setSelect) {
+        setSelect.addEventListener("change", () => {
+            setSelect.style.color = setSelect.value === "" ? "rgba(255, 255, 255, 0.5)" : "white";
+        });
+    }
 
     // 5. Booking Form Submission
     if (bookingForm) {
