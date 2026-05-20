@@ -146,8 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Setup Elements
     const bookingForm = document.getElementById('bookingForm');
     const pkgSelect = document.getElementById("b_package");
+    const setSelect = document.getElementById("b_set");
     const dateInput = document.getElementById('b_date');
-    const phoneInput = document.getElementById('b_phone'); // Targeted Phone Field
+    const phoneInput = document.getElementById('b_phone');
     const pkgButtons = document.querySelectorAll(".book-btn");
     const prevBtn = document.getElementById("calPrev");
     const nextBtn = document.getElementById("calNext");
