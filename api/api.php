@@ -188,7 +188,8 @@ elseif ($action === 'get_staff') {
         echo json_encode(['error' => 'Unauthorized', 'debug_role' => ($_SESSION['role'] ?? 'none')]);
         exit; 
     }
-    $stmt = $pdo->query("SELECT id, full_name as name FROM users WHERE LOWER(role) = 'staff'");
+    // Updated to pull email layout metadata securely
+    $stmt = $pdo->query("SELECT id, full_name as name, email FROM users WHERE LOWER(role) = 'staff'");
     $results = $stmt->fetchAll();
     ob_clean();
     echo json_encode($results);
@@ -250,7 +251,7 @@ elseif ($action === 'update_status') {
     }
     
     $data = json_decode(file_get_contents('php://input'), true);
-    $status = $data['status'] ?? ''; // e.g., 'accepted' or 'declined'
+    $status = $data['status'] ?? ''; 
     $bookingId = $data['id'] ?? null;
 
     if (!$bookingId || empty($status)) {
@@ -259,7 +260,6 @@ elseif ($action === 'update_status') {
         exit;
     }
 
-    // 1. Fetch the client's name, email, event date, and token before updating
     $fetchStmt = $pdo->prepare("SELECT name, email, event_date, token FROM bookings WHERE id = ?");
     $fetchStmt->execute([$bookingId]);
     $booking = $fetchStmt->fetch();
@@ -270,15 +270,12 @@ elseif ($action === 'update_status') {
         exit;
     }
 
-    // 2. Update the status in the database
     $stmt = $pdo->prepare("UPDATE bookings SET status = ? WHERE id = ?");
     $success = $stmt->execute([$status, $bookingId]);
 
-    // 3. If the database update succeeds, trigger the email notification
     if ($success) {
         $mail = new PHPMailer(true);
         try {
-            // SMTP Configurations (matching your 'book' routing)
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
@@ -293,9 +290,8 @@ elseif ($action === 'update_status') {
             $formattedDate = date("F j, Y", strtotime($booking['event_date']));
             $trackingUrl   = "https://www.thespotph.store/track.php?id=" . $booking['token'];
             
-            // Customize messaging states cleanly based on admin decision
             $statusTitle = ucfirst($status); 
-            $statusColor = ($status === 'accepted') ? '#2e7d32' : '#c62828'; // Green for accepted, Red for declined
+            $statusColor = ($status === 'accepted') ? '#2e7d32' : '#c62828'; 
 
             if ($status === 'accepted') {
                 $messageBody = "
@@ -323,9 +319,7 @@ elseif ($action === 'update_status') {
             ";
 
             $mail->send();
-        } catch (Exception $e) {
-            // Fails silently to prevent breaking the API execution return flow if mail servers timing out
-        }
+        } catch (Exception $e) { }
     }
 
     ob_clean();
@@ -351,6 +345,31 @@ elseif ($action === 'delete_booking') {
 
     $stmt = $pdo->prepare("DELETE FROM bookings WHERE id = ?");
     $success = $stmt->execute([$booking_id]);
+
+    ob_clean();
+    echo json_encode(['success' => $success]);
+    exit;
+}
+
+// Safe Staff Account Deletion
+elseif ($action === 'delete_staff') {
+    if (($_SESSION['role'] ?? '') !== 'admin') { 
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        exit; 
+    }
+    
+    $data = json_decode(file_get_contents('php://input'), true);
+    $staff_id = $data['id'] ?? null;
+
+    if (!$staff_id) {
+        ob_clean();
+        echo json_encode(['success' => false, 'message' => 'Missing account identifier.']);
+        exit;
+    }
+
+    $stmt = $pdo->prepare("DELETE FROM users WHERE id = ? AND LOWER(role) = 'staff'");
+    $success = $stmt->execute([$staff_id]);
 
     ob_clean();
     echo json_encode(['success' => $success]);
