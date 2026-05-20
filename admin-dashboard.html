@@ -380,6 +380,7 @@
             <th>Contact</th>
             <th>Event Date</th>
             <th>Package</th>
+            <th>Drink Set</th>
             <th>Status</th>
             <th>Action</th>
             <th>Delete</th>
@@ -538,7 +539,7 @@
           <td>${b.email}<br><small>${b.phone}</small></td>
           <td>${b.event_date}</td>
           <td>${b.package}</td>
-          <td><span class="status ${b.status}">${b.status}</span></td>
+          <td>${b.drink_set || '-'}</td> <td><span class="status ${b.status}">${b.status}</span></td>
           <td>
             <button class="action-btn" onclick="openModal(${b.id})">Review</button>
           </td>
@@ -564,7 +565,7 @@
     document.getElementById('modalInfo').innerHTML = `
       <p><strong>Name:</strong> ${b.name}</p>
       <p><strong>Package:</strong> ${b.package}</p>
-      <p><strong>Message:</strong><br>${b.message || '<em>No message provided</em>'}</p>
+      <p><strong>Drink Set:</strong> ${b.drink_set || 'Not Specified'}</p> <p><strong>Message:</strong><br>${b.message || '<em>No message provided</em>'}</p>
       <p><strong>Current Date:</strong> ${b.event_date}</p>
     `;
 
