@@ -133,16 +133,28 @@ elseif ($action === 'book') {
 
             $mail->setFrom('spotph.13@gmail.com', 'TheSpotPH');
             $mail->addAddress($data['email'], $data['name']);
+            
+            // NEW CHANGE HERE: Automatically blind-copies your address whenever a ticket arrives
+            $mail->addBCC('spotph.13@gmail.com', 'TheSpotPH Admin Notifications');
 
             $trackingUrl = "https://www.thespotph.store/track.php?id=" . $token;
             $mail->isHTML(true);
-            $mail->Subject = 'Your Booking Request Status - TheSpotPH';
+            $mail->Subject = 'New Booking Request Received - TheSpotPH';
             $mail->Body    = "
                 <div style='font-family: sans-serif; max-width: 600px; border: 1px solid #eee; padding: 20px;'>
-                    <h2 style='color: #cfc7b0;'>Hello " . htmlspecialchars($data['name']) . "!</h2>
-                    <p>We've received your booking request for <strong>" . date("F j, Y", strtotime($data['date'])) . "</strong>.</p>
-                    <p>You can track your request status using the button below:</p>
-                    <a href='$trackingUrl' style='display:inline-block; padding:12px 25px; background:#cfc7b0; color:#111; text-decoration:none; border-radius:30px; font-weight:bold;'>Track My Ticket</a>
+                    <h2 style='color: #cfc7b0;'>Booking Request Summary</h2>
+                    <p>A new reservation ticket has been logged into the platform database.</p>
+                    <hr style='border:none; border-top:1px solid #eee; margin:15px 0;' />
+                    <p><strong>Client Name:</strong> " . htmlspecialchars($data['name']) . "</p>
+                    <p><strong>Email Address:</strong> " . htmlspecialchars($data['email']) . "</p>
+                    <p><strong>Phone Line:</strong> " . htmlspecialchars($data['phone']) . "</p>
+                    <p><strong>Target Date:</strong> " . date("F j, Y", strtotime($data['date'])) . "</p>
+                    <p><strong>Package Type:</strong> " . htmlspecialchars($data['package']) . "</p>
+                    <p><strong>Drink Selection:</strong> " . htmlspecialchars($drink_set ?? 'Not Specified') . "</p>
+                    <p><strong>Message/Notes:</strong><br>" . nl2br(htmlspecialchars($data['message'] ?? 'None')) . "</p>
+                    <hr style='border:none; border-top:1px solid #eee; margin:15px 0;' />
+                    <p>You can manage this item from your dashboard or inspect it directly via the public tracking portal link below:</p>
+                    <a href='$trackingUrl' style='display:inline-block; padding:12px 25px; background:#cfc7b0; color:#111; text-decoration:none; border-radius:30px; font-weight:bold;'>Review Booking Ticket</a>
                     <p style='margin-top:20px; font-size:12px; color:#888;'>Reference ID: $token</p>
                 </div>
             ";
@@ -189,7 +201,6 @@ elseif ($action === 'get_staff') {
         echo json_encode(['error' => 'Unauthorized', 'debug_role' => ($_SESSION['role'] ?? 'none')]);
         exit; 
     }
-    // Updated to pull email layout metadata securely
     $stmt = $pdo->query("SELECT id, full_name as name, email FROM users WHERE LOWER(role) = 'staff'");
     $results = $stmt->fetchAll();
     ob_clean();
@@ -215,7 +226,6 @@ elseif ($action === 'create_staff') {
         exit;
     }
 
-    // Email duplication protection
     $checkStmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
     $checkStmt->execute([$email]);
     if ($checkStmt->fetch()) {
@@ -352,7 +362,6 @@ elseif ($action === 'delete_booking') {
     exit;
 }
 
-// Safe Staff Account Deletion
 elseif ($action === 'delete_staff') {
     if (($_SESSION['role'] ?? '') !== 'admin') { 
         ob_clean();
